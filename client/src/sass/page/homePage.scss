@@ -1,0 +1,571 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+GB+J+Guides:ital@0;1&display=swap");
+
+// --- 1. VARIABLES ---
+$primary-color: #1e3a8a; // Dark Blue
+$success-bg: #22c55e; // Green
+$error-bg: #ef4444; // Red
+$white: #ffffff;
+$gold: #f59e0b; // Gold/Yellow for highlights
+$border-radius: 16px;
+$shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+// --- 2. PAGE CONTAINER ---
+.home-page {
+  max-width: 1200px;
+  margin: auto;
+  min-height: 86vh;
+  // background-color: whitesmoke;
+  font-family: cursive;
+}
+
+// --- 3. GAME HEADER (Title + Player Badge) ---
+.game-header {
+  // max-width: 1200px;
+  // margin: 0.5rem;
+  margin: 1.5rem 0;
+  margin-right: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; // Wrap on small phones
+  gap: 1rem;
+
+  .game-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: $primary-color;
+    margin: 0;
+  }
+
+  .player-badge {
+    border-radius: 12px;
+    border-right: 5px solid #f2cc8f;
+    border-bottom: 5px solid #f2cc8f;
+
+    font-family: cursive;
+
+    color: #3d405b;
+    padding: 10px;
+    border-radius: 9999px;
+    font-weight: bold;
+    font-size: 1.4rem;
+
+    // transition
+    display: flex;
+    align-items: center;
+    cursor: default;
+    transition: all 0.5s ease-in-out;
+    // animation: tilt-shaking 1s ease-in-out infinite;
+
+    &:hover {
+      background-color: #3d405b;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Slight lift on hover
+      // animation: none;
+      color: white;
+      text-shadow: none;
+      cursor: pointer;
+    }
+
+    // --- THE HOVER LOGIC ---
+    strong {
+      // 1. Hidden State (Default)
+      max-width: 0; // Takes up no width
+      opacity: 1; // Invisible
+      overflow: hidden; // Hides the text that overflows width 0
+      white-space: nowrap; // Keeps text on one line so it slides out
+      transition:
+        max-width 0.8s ease-in-out,
+        opacity 0.8s ease-in-out,
+        margin 0.8s ease;
+      margin-right: 0; // No gap when hidden
+      color: white; // perfect animation
+      text-shadow: none; // perfect animation
+    }
+
+    // 2. Visible State (On Parent Hover)
+    &:hover strong {
+      max-width: 1000px; // Expand wide enough to fit the text
+      opacity: 1; // Fade in
+      margin-right: 0.5rem; // Add a small gap between message and username
+      color: #f2e9e4;
+      text-shadow: none;
+    }
+  }
+}
+
+// --- 4. MAIN GRID LAYOUT ---
+.home-layout {
+  display: flex;
+  justify-content: space-evenly;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  @media (min-width: 768px) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+// --- 5. GAME SECTION (Left Column) ---
+.game-section {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+// Status Cards (Loading, Mastered, Error Messages)
+.status-card {
+  padding: 3rem;
+  border-radius: $border-radius;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+
+  &.master {
+    background-color: #dcfce7; // Light green background
+    color: #166534; // Dark green text
+  }
+
+  &.loading {
+    color: #6b7280;
+    .spinner {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  &.error-msg {
+    background-color: #fee2e2; // Light red background
+    color: #991b1b; // Dark red text
+  }
+}
+
+// Feedback Popup (Correct/Wrong Card)
+.feedback-card {
+  padding: 2rem;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  text-align: center;
+  color: $white;
+
+  &.success {
+    background-color: $success-bg;
+    width: 40%;
+    max-width: 36rem;
+  }
+
+  &.error {
+    background-color: $error-bg;
+    width: 40%;
+    max-width: 36rem;
+  }
+
+  .feedback-icon {
+    rotate: 360deg;
+
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    transition: all 0.5s;
+    &:hover {
+      rotate: 1.75turn;
+    }
+  }
+
+  .feedback-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  .feedback-text {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .btn-next {
+    font-family: cursive;
+    background-color: $white;
+    color: #333;
+    font-weight: bold;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px; // Pill shape
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s;
+
+    &:hover {
+      color: #f2e9e4;
+      background: #343463;
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+  }
+}
+
+// --- 6. SIDEBAR SECTION (Right Column) ---
+.sidebar-section {
+  // display: flex;
+  // flex-direction: column;
+  gap: 2rem;
+}
+
+// ZPD Box (Yellow Info Box)
+.zpd-card {
+  // background-color: #fef9c3; // Light yellow
+  display: flex;
+  align-items: center;
+  border-radius: 9999px;
+  border-left: 5px solid #eab308; // Darker yellow border
+  font-size: 1.5rem;
+  > p {
+    margin: 0px;
+    padding: 10px;
+    font-weight: bold;
+  }
+}
+.zpd-title {
+  color: #854d0e;
+  font-weight: bold;
+}
+.highlight {
+  font-weight: bolder;
+  color: #e07a5f;
+  margin-right: 0.4rem;
+}
+.highlight1 {
+  font-weight: bolder;
+  color: #edb151;
+}
+.highlight2 {
+  font-weight: bolder;
+  color: #edb151;
+  margin-left: 0.4rem;
+}
+.highlight3 {
+  font-weight: bolder;
+  color: #e07a5f;
+  margin-left: 0.4rem;
+  //   border-left: 5px solid #E07A5F;
+  // border-radius: 10px;
+  // padding-left: 0.5rem;
+}
+
+.zpd__text {
+  display: flex;
+  align-items: center;
+  border-radius: 9999px;
+  border-left: 5px solid #eab308;
+  font-size: 1.5rem;
+  padding: 10px;
+  color: #9a8c98;
+  font-weight: bold;
+
+  // transition
+  display: flex;
+  align-items: center;
+  cursor: default;
+  transition: all 0.3s ease;
+  // animation: tilt-shaking 1s ease-in-out infinite;
+
+  &:hover {
+    animation: none;
+    background-color: #22223b;
+    color: #9a8c98;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Slight lift on hover
+  }
+
+  // --- THE HOVER LOGIC ---
+  strong {
+    color: #f2e9e4;
+
+    // 1. Hidden State (Default)
+    max-width: 0; // Takes up no width
+    opacity: 1; // Invisible
+    overflow: hidden; // Hides the text that overflows width 0
+    white-space: nowrap; // Keeps text on one line so it slides out
+    transition:
+      max-width 0.8s ease-in-out,
+      opacity 0.8s ease-in-out,
+      margin 0.8s ease;
+    margin-right: 0; // No gap when hidden
+  }
+
+  // 2. Visible State (On Parent Hover)
+  &:hover strong {
+    max-width: 1000px; // Expand wide enough to fit the text
+    opacity: 1; // Fade in
+    margin-right: 0.5rem; // Add a small gap between message and username
+    color: #f2e9e4;
+  }
+}
+
+.card__header__type {
+  // text-decoration: overline;
+  // color: #E07A5F;
+  color: #e07a5f;
+  font-family: cursive;
+  margin: auto;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  border-radius: 10px;
+  // padding: 10px 15px;
+  transition: 0.7s all;
+  // border-left: 5px solid #f2cc8f;
+  // border-right: 5px solid #f2cc8f;
+  width: fit-content;
+  margin-top: 1rem;
+  text-decoration: underline;
+  // border-bottom: 5px solid #81b29a;
+}
+
+/* --- Streak System Badge --- */
+.streak__badge {
+  position: relative;
+  margin-left: auto;
+  width: 20%;
+  text-align: center;
+  // background: linear-gradient(135deg, #f4f1de, #f2cc8f);
+  // border-right: 5px solid #f2cc8f;
+  // border-bottom: 5px solid #f2cc8f;
+  font-family: cursive;
+  color: #ffffff;
+  // background-color: #22223b;
+  padding: 8px 16px;
+  // border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  // background-color: #3d405b;
+  // text-shadow: rgba(255, 162, 0, 0.84) 0px 0px 39px; // animation: popInBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  color: #fff;
+  overflow: hidden;
+  border-top: 1px solid rgb(255 49 49);
+  border-right: 1px solid rgb(0 255 255);
+  border-bottom: 1px solid rgb(57 255 20);
+  border-left: 1px solid rgb(255 255 113);
+  border-radius: 10px;
+  background: #22223b;
+}
+
+@keyframes popInBounce {
+  0% {
+    transform: scale(0) rotate(-10deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+// Border Animation
+
+.top {
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    transparent 50%,
+    rgba(255, 49, 49, 0.5),
+    rgb(255, 49, 49)
+  );
+}
+
+.bottom {
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    rgb(57, 255, 20),
+    rgba(57, 255, 20, 0.5),
+    transparent 50%
+  );
+}
+
+.right {
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 30%,
+    rgba(0, 255, 255, 0.5),
+    rgb(0, 255, 255)
+  );
+}
+
+.left {
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  height: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(255, 255, 113),
+    rgba(255, 255, 113, 0.5),
+    transparent 70%
+  );
+}
+
+.top {
+  animation: animateTop 3s ease-in-out infinite;
+}
+
+.bottom {
+  animation: animateBottom 3s ease-in-out infinite;
+}
+
+.right {
+  animation: animateRight 3s ease-in-out infinite;
+}
+
+.left {
+  animation: animateLeft 3s ease-in-out infinite;
+}
+
+@keyframes animateTop {
+  25% {
+    width: 100%;
+    opacity: 1;
+  }
+
+  30%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes animateBottom {
+  0%,
+  50% {
+    opacity: 0;
+    width: 0;
+  }
+
+  75% {
+    opacity: 1;
+    width: 100%;
+  }
+
+  76%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes animateRight {
+  0%,
+  25% {
+    opacity: 0;
+    height: 0;
+  }
+
+  50% {
+    opacity: 1;
+    height: 100%;
+  }
+
+  55%,
+  100% {
+    height: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes animateLeft {
+  0%,
+  75% {
+    opacity: 0;
+    bottom: 0;
+    height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    height: 100%;
+  }
+}
+.top,
+.bottom,
+.right,
+.left {
+  position: absolute;
+  border-radius: 100vmax;
+}
+
+/* --------------------------Streak Animation ------------------------------*/
+// Correct
+@keyframes popBounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.25);
+    filter: brightness(1.2);
+  } /* Grows and gets slightly brighter */
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+.streak__badge {
+  /* ... your existing styles stay exactly the same ... */
+
+  /* Add this new modifier class right inside or below .streak__badge */
+  &.pop-active {
+    animation: popBounce 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+  }
+}
+
+// Fail
+@keyframes shakeError {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.streak__badge {
+  /* ... your existing code ... */
+
+  &.pop-active {
+    animation: popBounce 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+  }
+
+  /* NEW: The failure state */
+  &.shake-active {
+    animation: shakeError 0.5s ease-in-out;
+    background-color: #b91c1c;
+    color: white;
+    border-color: #b91c1c;
+
+    /* Force the inner spans to turn white so they don't clash with the red background */
+    .highlight1,
+    .highlight2 {
+      color: white;
+      text-shadow: none;
+    }
+  }
+}

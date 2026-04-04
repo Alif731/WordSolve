@@ -1,0 +1,363 @@
+.leaderboard-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+
+  &.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+}
+
+// --- HEADER ---
+.leaderboard-header {
+  margin-bottom: 2rem;
+
+  .title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+
+    .header-icon {
+      color: #e7623e;
+      // background: #fff7ed;
+      padding: 10px;
+      border-radius: 12px;
+      width: 70px;
+      height: 70px;
+    }
+
+    h1 {
+      margin: 0;
+      color: #e7623e;
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    p {
+      margin: 0.25rem 0 0;
+      color: #3d405b;
+      font-size: 1rem;
+    }
+  }
+}
+
+// --- SHARED PANELS ---
+.leaderboard-panel {
+  background: #ffffff;
+  border: 2px solid #f2cc8f;
+  border-radius: 20px;
+  // padding: 1.5rem;
+  padding: 1rem;
+
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+
+  &.error-state {
+    border-color: #fca5a5;
+    background: #fef2f2;
+    color: #b91c1c;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  &.loading-state {
+    text-align: center;
+    color: #6b7280;
+    font-weight: 600;
+    padding: 3rem;
+  }
+}
+
+// .settings-panel {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   flex-wrap: wrap;
+//   gap: 1rem;
+// }
+// --- SETTINGS PANEL ---
+.status-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1rem;
+
+  .text-gray {
+    color: #6b7280;
+  }
+  .label-text {
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .status-badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    &.active {
+      background: #dcfce7;
+      color: #15803d;
+    }
+    &.inactive {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+  }
+}
+
+// --- BUTTONS (Mirrors Teacher Dashboard) ---
+.control-btn {
+  min-width: 220px;
+  height: 54px;
+  border-radius: 12px;
+  border: 1px solid #fecaca;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-left: auto;
+
+  &.red {
+    background: #fee2e2;
+    color: #dc2626;
+    &:hover {
+      background: #fecaca;
+    }
+  }
+  &.green {
+    background: #d1fae5;
+    color: #059669;
+    &:hover {
+      background: #a7f3d0;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// --- TABLE LAYOUT ---
+.table-panel {
+  padding: 0; // Remove padding so table hits the edges
+  overflow: scroll;
+
+  .panel-header {
+    padding: 1.5rem 1.5rem 0;
+    h2 {
+      margin: 0;
+      color: #1f2937;
+      font-size: 1.4rem;
+    }
+  }
+}
+
+.leaderboard-table-wrapper {
+  overflow-x: auto;
+  // padding: 1rem;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+
+  th,
+  td {
+    text-align: left;
+    padding: 1rem;
+    color: #374151;
+  }
+
+  th {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #f3f4f6;
+  }
+
+  tr {
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.2s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+    &:hover {
+      background: #f9fafb;
+    }
+  }
+
+  // Highlights for Top 3
+  .rank-row {
+    &.top-1 {
+      background: #fffbeb;
+      td.rank-cell {
+        font-weight: 800;
+        color: #fbbf24;
+      }
+    }
+    &.top-2 {
+      background: #f8fafc;
+      td.rank-cell {
+        font-weight: 800;
+        color: #94a3b8;
+      }
+    }
+    &.top-3 {
+      background: #fff7ed;
+      td.rank-cell {
+        font-weight: 800;
+        color: #b45309;
+      }
+    }
+  }
+
+  .rank-cell {
+    font-weight: 700;
+    color: #6b7280;
+    vertical-align: middle; /* Replaces flex align-items */
+
+    svg {
+      padding: 0.5rem;
+      border-radius: 50%;
+      background: #3d405b;
+      vertical-align: middle;
+    }
+  }
+
+  .student-cell {
+    vertical-align: middle; /* Replaces flex align-items */
+
+    .avatar {
+      display: inline-block;
+      font-size: 1.5rem;
+      padding: 4px;
+      border-radius: 50%;
+      margin-right: 12px; /* Replaces the flex 'gap' */
+      vertical-align: middle;
+    }
+
+    .student-name {
+      font-weight: 600;
+      color: #1f2937;
+      vertical-align: middle;
+    }
+  }
+
+  .accuracy-pill {
+    background: #e0e7ff;
+    color: #0071e9;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+}
+
+//
+.leaderboard__empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  margin: 20px auto;
+  max-width: 600px;
+
+  .icon-wrapper {
+    background: rgba(85, 174, 247, 0.1);
+    color: #0071e9;
+    padding: 25px;
+    border-radius: 50%;
+    margin-bottom: 25px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  h2 {
+    color: #e7623e;
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    color: #718096;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    max-width: 400px;
+  }
+
+  .leaderboard-action-btn {
+    background: linear-gradient(90deg, #0071e9, #0071e9);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 5px 20px rgba(34, 103, 206, 0.5);
+    }
+  }
+}
+
+// Hover animation for the trophy
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+// --- EMPTY STATE ---
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+
+  h3 {
+    color: #374151;
+    margin: 1rem 0 0.5rem;
+    font-size: 1.25rem;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

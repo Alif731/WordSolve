@@ -1,0 +1,170 @@
+/* src/sass/components/dragDrop.scss */
+
+/* --- Container --- */
+.drag-drop-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* --- THE ANSWER BOX (?) --- */
+.drop-area {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.equals-sign {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #475569;
+}
+
+.droppable-zone {
+  width: 100px;
+  height: 100px;
+  border: 3px dashed #cbd5e1;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #94a3b8;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+  // position: relative; /* Needed for absolute positioning of number */
+
+  &--over {
+    background-color: #eff6ff;
+    border-color: #3b82f6;
+    transform: scale(1.05);
+  }
+
+  /* Correct State (Green) */
+  &--correct {
+    width: 90%;
+    border-style: solid;
+    border-color: #22c55e;
+    background-color: #ffffff;
+    color: #15803d;
+    
+    .option-icon-grid {
+        justify-content: center;
+        align-content: center;
+        padding-bottom: 20px; /* Make room for number */
+    }
+    
+    .zone-number {
+        // position: absolute;
+        bottom: 8px;
+        right: 12px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #15803d;
+    }
+  }
+
+  /* Error State (Red) */
+  &--error {
+    width: 90%;
+    border-style: solid;
+    border-color: #ef4444;     /* Red Border */
+    background-color: #fef2f2; /* Light Red Background */
+    color: #b91c1c;            /* Dark Red Text */
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    
+    .zone-number {
+        // position: absolute;
+        bottom: 8px;
+        right: 12px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #b91c1c;
+    }
+  }
+}
+
+/* Shake Animation for extra feedback */
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* --- THE OPTIONS (White Cards) --- */
+.options-area {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  /* Auto-fill grid: Minimum 200px width per card, expand to fill */
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); 
+  gap: 2.5rem;
+  justify-items: center; /* Center items in their grid cells */
+}
+
+/* Draggable Option Style */
+.draggable-option {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+      gap: 10px;
+      width: 90%;
+  background-color: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px; 
+  cursor: grab;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding: 10px;
+  touch-action: none; 
+      color: #E07A5F;
+
+  &:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+  }
+  
+  &:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+  }
+}
+
+/* Disabled Option Style (Fade out unused options) */
+.draggable-option--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+  pointer-events: none;
+}
+
+/* Grid for the tiny icons */
+.option-icon-grid {
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none; /* Let clicks pass through */
+  width: 100%;
+  height: 100%;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* The small number in the corner */
+.option-number {
+  bottom: 8px;
+  right: 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #81B29A;
+}

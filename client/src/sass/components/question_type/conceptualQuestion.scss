@@ -1,0 +1,136 @@
+@use "../../util/breakpoint" as ut;
+
+.card__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  @include ut.breakpoint(small) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 2rem;
+
+  &__btn {
+    background-color: #ffffff;
+    color: #e07a5f;
+    border: none;
+    font-size: 2rem;
+    font-weight: 700;
+    // padding: 1.6rem 1rem;
+    padding: 1.2rem 0.2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.7s ease;
+    box-shadow:
+      rgb(0 0 0 / 49%) 0px 2px 4px,
+      rgb(0 0 0) 0px 7px 13px -3px,
+      #e07a5f 0px -3px 0px inset;
+
+    &:hover {
+      background-color: #3d405b;
+      // background-color: #0081A7;
+      color: #81b29a;
+      transform: translateY(4px);
+      box-shadow:
+        rgb(0 0 0 / 49%) 0px 2px 4px,
+        rgb(0 0 0) 0px 7px 13px -3px,
+        #81b29a 0px -3px 0px inset;
+      .sike {
+        display: inline-block;
+        transform: scale(1.2);
+        &__options {
+          border: 3px solid #81b29a;
+          color: #81b29a;
+        }
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    &__success {
+      background-color: #81b29a !important;
+      box-shadow:
+        rgb(0 0 0 / 49%) 0px 2px 4px,
+        rgb(0 0 0) 0px 7px 13px -3px,
+        #81b29a 0px -3px 0px inset;
+      color: white !important;
+      animation: popBounce 0.8s ease-in-out;
+    }
+
+    &__error {
+      background-color: #e07a5f !important;
+      box-shadow:
+        rgb(0 0 0 / 49%) 0px 2px 4px,
+        rgb(0 0 0) 0px 7px 13px -3px,
+        #e07a5f 0px -3px 0px inset;
+      color: white !important;
+      transform: scale(0.98);
+      animation: tilt-shake 0.8s ease-in-out both;
+    }
+  }
+}
+
+// override foundation sign color to white
+.card__options__btn__success .sike__options,
+.card__options__btn__error .sike__options {
+  border-color: white !important;
+  color: white !important;
+  transition: all 0.7s;
+}
+
+.sike {
+  transition: all 0.7s;
+  font-family: cursive;
+  &__options {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 3px solid #f2cc8f;
+    font-weight: bold;
+    margin-right: 1rem;
+    color: #f2cc8f;
+    padding: 3px;
+  }
+}
+
+@keyframes tilt-shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes popBounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.15);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  80% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

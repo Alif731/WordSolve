@@ -1,0 +1,110 @@
+$navy-dark: #3d405b;
+$wizard-purple: #7c3aed;
+$emerald: #10b981;
+$danger-red: #ef4444;
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+.heatmap-panel {
+  margin-top: 2rem;
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .info-tooltip {
+      position: relative;
+      cursor: help;
+      color: $text-muted;
+
+      &:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .tooltip-text {
+        visibility: hidden;
+        width: 200px;
+        background-color: #334155;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px;
+        position: absolute;
+        z-index: 100;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .heatmap-cell {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #81b29a;
+      opacity: 0.1;
+      transition: opacity 0.3s;
+    }
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+      border-color: #81b29a; // replaced undefined variable
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    .node-id {
+      font-size: 0.7rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: $text-muted;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .slip-score {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: $text-main;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+  }
+}
