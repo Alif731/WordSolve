@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Confetti from "react-confetti";
-import { Activity } from "lucide-react";
 
 // Scss Components
 import "../sass/components/questionCard.scss";
@@ -129,6 +128,7 @@ const QuestionCard = ({ problem, onSubmit }) => {
   const isConceptual = questionType === "conceptual";
   const visualData = problem.question.visualData;
   const isIconsItems = questionType === "icons_items";
+  const showTelemetry = Boolean(problem?.adaptiveState) && import.meta.env.DEV;
   const isMatchTheFollowing =
     isIconsItems &&
     Array.isArray(visualData?.leftItems) &&
@@ -150,67 +150,72 @@ const QuestionCard = ({ problem, onSubmit }) => {
   ];
 
   return (
-    <div>
-      {/* THE GHOST PANEL (Only visible in dev mode) */}
-      <GhostPanel
-        adaptiveData={problem?.adaptiveState}
-        conceptId={problem?.concept?.id}
-      />
-      {/* This renders the actual question (Conceptual, Bar Model, etc.) */}
-      <div className="question__card">
-        {isSuccess && (
-          <Confetti recycle={false} numberOfPieces={500} gravity={0.3} />
-        )}
-        <div className="question__text">
-          <span className="highlight3">Q,</span> {problem.question.text}
-        </div>
-
-        {isMatchTheFollowing && (
-          <div className="icons-items__container">
-            <MatchTheFollowing
-              key={problem.question.id}
-              id={problem.question.id || problem.question._id}
-              leftItems={matchLeft}
-              rightItems={matchRight}
-              onComplete={handleMatchComplete}
-            />
+    <div className="question-shell">
+      <div className="question-shell__main">
+        <div className="question__card">
+          {isSuccess && (
+            <Confetti recycle={false} numberOfPieces={500} gravity={0.3} />
+          )}
+          <div className="question__text">
+            <span className="highlight3">Q,</span> {problem.question.text}
           </div>
-        )}
 
-        {questionType === "visual" && visualData && (
-          <VisualBarModel
-            problem={problem}
-            answer={answer}
-            setAnswer={setAnswer}
-            isSuccess={isSuccess}
-            isError={isError}
-            handleKeyDown={handleKeyDown}
-            handleSubmit={handleSubmit}
-          />
-        )}
-
-        {isConceptual ? (
-          <ConceptualQuestion
-            problem={problem}
-            selectedOption={selectedOption}
-            isSuccess={isSuccess}
-            isError={isError}
-            handleOptionClick={handleOptionClick}
-          />
-        ) : (
-          <div>
-            {!isConceptual && questionType !== "visual" && !isIconsItems && (
-              <DirectInputQuestion
-                answer={answer}
-                setAnswer={setAnswer}
-                isSuccess={isSuccess}
-                isError={isError}
-                handleSubmit={handleSubmit}
+          {isMatchTheFollowing && (
+            <div className="icons-items__container">
+              <MatchTheFollowing
+                key={problem.question.id}
+                id={problem.question.id || problem.question._id}
+                leftItems={matchLeft}
+                rightItems={matchRight}
+                onComplete={handleMatchComplete}
               />
-            )}
-          </div>
-        )}
+            </div>
+          )}
+
+          {questionType === "visual" && visualData && (
+            <VisualBarModel
+              problem={problem}
+              answer={answer}
+              setAnswer={setAnswer}
+              isSuccess={isSuccess}
+              isError={isError}
+              handleKeyDown={handleKeyDown}
+              handleSubmit={handleSubmit}
+            />
+          )}
+
+          {isConceptual ? (
+            <ConceptualQuestion
+              problem={problem}
+              selectedOption={selectedOption}
+              isSuccess={isSuccess}
+              isError={isError}
+              handleOptionClick={handleOptionClick}
+            />
+          ) : (
+            <div>
+              {!isConceptual && questionType !== "visual" && !isIconsItems && (
+                <DirectInputQuestion
+                  answer={answer}
+                  setAnswer={setAnswer}
+                  isSuccess={isSuccess}
+                  isError={isError}
+                  handleSubmit={handleSubmit}
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
+
+      {showTelemetry && (
+        <aside className="question-shell__telemetry">
+          <GhostPanel
+            adaptiveData={problem?.adaptiveState}
+            conceptId={problem?.concept?.id}
+          />
+        </aside>
+      )}
     </div>
   );
 };

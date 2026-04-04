@@ -351,12 +351,12 @@ const TeacherDashboard = () => {
                         <div className="gap-analysis">
                           <label>Mastery Gap</label>
                           <div className="mini-track">
-                            <div
-                              className="mini-fill"
-                              style={{
-                                width: `${Math.max((entry.score / 7.82) * 100, 2)}%`,
-                              }}
-                            />
+                              <div
+                                className="mini-fill"
+                                style={{
+                                  width: `${Math.max((entry.score / 8) * 100, 2)}%`,
+                                }}
+                              />
                           </div>
                         </div>
                       </div>

@@ -135,14 +135,9 @@ const ProgressBar = () => {
   }));
 
   const calculateHonestProgress = (entry) => {
-    const threshold = 7.82;
-    const minReq = 5;
+    const threshold = 8;
     const score = entry.adaptiveState?.changePointScore || 0;
-    const totalAttempts = entry.attemptCount || 0;
-
-    const scoreWeight = Math.min(score / threshold, 1);
-    const attemptWeight = Math.min(totalAttempts / minReq, 1);
-    return (((scoreWeight + attemptWeight) / 2) * 100).toFixed(0);
+    return (Math.min(score / threshold, 1) * 100).toFixed(0);
   };
 
   return (
