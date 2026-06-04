@@ -114,7 +114,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/dist")));
 
   // Any non-API route serves the React index.html for client-side routing
-  app.get("*", (req, res) => {
+  app.get(/.*/, (req, res) => {
     // Prevent API routing misdirection
     if (req.originalUrl.startsWith("/api")) {
       return res.status(404).json({ message: "API endpoint not found" });
