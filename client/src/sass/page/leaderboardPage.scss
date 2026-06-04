@@ -1,3 +1,4 @@
+@use "../util/breakpoint" as ut;
 .leaderboard-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -21,10 +22,23 @@
     .header-icon {
       color: #e7623e;
       // background: #fff7ed;
-      padding: 10px;
+      // padding: 10px;
       border-radius: 12px;
       width: 70px;
       height: 70px;
+      @include ut.breakpoint(medium) {
+        width: 50px;
+        height: 50px;
+      }
+      @include ut.breakpoint(small) {
+        width: 40px;
+        height: 40px;
+      }
+      //375px
+      @include ut.breakpoint(xSmall) {
+        width: 30px;
+        height: 30px;
+      }
     }
 
     h1 {
@@ -32,12 +46,32 @@
       color: #e7623e;
       font-size: 2rem;
       font-weight: 800;
+      @include ut.breakpoint(medium) {
+        font-size: 1.3rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 1rem;
+      }
+      //375px
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.8rem;
+      }
     }
 
     p {
       margin: 0.25rem 0 0;
       color: #3d405b;
       font-size: 1rem;
+      @include ut.breakpoint(medium) {
+        font-size: 0.6rem;
+      }
+      // @include ut.breakpoint(small) {
+      //   font-size: 0.6rem;
+      // }
+      //375px
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.5rem;
+      }
     }
   }
 }
@@ -89,6 +123,9 @@
   .label-text {
     font-weight: 600;
     color: #374151;
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.7rem;
+    }
   }
 
   .status-badge {
@@ -100,10 +137,16 @@
     &.active {
       background: #dcfce7;
       color: #15803d;
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.7rem;
+      }
     }
     &.inactive {
       background: #fee2e2;
       color: #b91c1c;
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.7rem;
+      }
     }
   }
 }
@@ -175,6 +218,9 @@
     text-align: left;
     padding: 1rem;
     color: #374151;
+    @include ut.breakpoint(medium) {
+      padding: 0.7rem;
+    }
   }
 
   th {
@@ -184,6 +230,16 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     border-bottom: 2px solid #f3f4f6;
+    // @include ut.breakpoint(medium) {
+    //     font-size: 0.6rem;
+    //   }
+    @include ut.breakpoint(medium) {
+      font-size: 0.7rem;
+    }
+    //375px
+    // @include ut.breakpoint(xSmall) {
+    //   font-size: 0.3rem;
+    // }
   }
 
   tr {
@@ -196,6 +252,12 @@
     &:hover {
       background: #f9fafb;
     }
+    @include ut.breakpoint(medium) {
+      font-size: 0.9rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.7rem;
+    }
   }
 
   // Highlights for Top 3
@@ -205,6 +267,7 @@
       td.rank-cell {
         font-weight: 800;
         color: #fbbf24;
+        // text-align: center;
       }
     }
     &.top-2 {
@@ -212,6 +275,7 @@
       td.rank-cell {
         font-weight: 800;
         color: #94a3b8;
+        // text-align: center;
       }
     }
     &.top-3 {
@@ -219,6 +283,7 @@
       td.rank-cell {
         font-weight: 800;
         color: #b45309;
+        // text-align: center;
       }
     }
   }
@@ -233,6 +298,8 @@
       border-radius: 50%;
       background: #3d405b;
       vertical-align: middle;
+      width: 25px;
+      height: 25px;
     }
   }
 

@@ -7,7 +7,12 @@
     "start": "node index.js",
     "dev": "node index.js",
     "server": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "verify:curriculum": "node __tests__/verify.js",
+    "verify:schema": "node __tests__/verifySchemaQuestions.js",
+    "db:seed": "node utils/seeder.js",
+    "db:seed:prod": "node utils/seeder.js --prod-seed",
+    "db:seed:prod:wipe": "node utils/seeder.js --prod-wipe"
   },
   "keywords": [],
   "author": "",
@@ -19,13 +24,18 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "helmet": "^8.0.0",
+    "compression": "^1.7.4",
     "express-rate-limit": "^8.3.1",
     "jsonwebtoken": "^9.0.3",
     "mathjs": "^15.1.0",
     "mongodb-memory-server": "^11.0.1",
-    "mongoose": "^9.1.2"
+    "mongoose": "^9.1.2",
+    "lusca": "^1.7.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "supertest": "^7.0.0",
+    "vitest": "^4.1.5"
   }
 }

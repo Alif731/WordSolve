@@ -1,28 +1,4 @@
-.login__img {
-  width: 60%;
-  height: 92vh;
-  position: relative;
-  // border-radius: 24px;
-  overflow: hidden;
-  box-shadow: rgba(61, 64, 91, 0.15) 0 10px 24px -8px;
-}
-
-.bg-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  // background: rgba(0, 0, 0, 0.02);
-  z-index: 1;
-}
+@use "../util/breakpoint" as ut;
 
 .login__main {
   display: flex;
@@ -44,13 +20,60 @@
     );
 }
 
+.login__img {
+  width: 60%;
+  height: 92vh;
+  position: relative;
+  // border-radius: 24px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: rgba(61, 64, 91, 0.15) 0 10px 24px -8px;
+}
+
+.bg-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  object-position: center;
+  // 1024px
+  @include ut.breakpoint(larger) {
+    object-fit: contain;
+  }
+  // 900px
+  @include ut.breakpoint(large) {
+    // object-fit: cover;
+  }
+  //700px
+  @include ut.breakpoint(medium) {
+    object-fit: fill;
+  }
+  // 425px:
+  @include ut.breakpoint(small) {
+    // font-size: 0.62rem;
+  }
+  //375px
+  @include ut.breakpoint(xSmall) {
+    // font-size: 0.47rem;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  // background: rgba(0, 0, 0, 0.02);
+  z-index: 1;
+}
+
 .login__container {
   // height: 600px;
   // width: min(460px, 100%);
   height: stretch;
   width: 40%;
   padding: 2rem;
-  margin: 0.1rem;
   background: #ffffff;
   // border-radius: 24px;
   // border-right: 5px solid #3d405b;
@@ -59,6 +82,10 @@
     rgba(224, 122, 95, 0.23) 0 0 5px 0,
     rgba(61, 64, 91, 0.15) 0 10px 24px -8px;
   text-align: center;
+  @include ut.breakpoint(medium) {
+    padding: 1rem;
+    // font-size: 0.62rem;
+  }
 
   &__header {
     margin-top: 2.5rem;
@@ -67,7 +94,27 @@
     color: #3d405b;
     font-size: clamp(2rem, 4vw, 2.6rem);
     line-height: 1.1;
-    // text-shadow: rgba(242, 204, 143, 0.75) 0 0 14px;
+    // 1024px
+    @include ut.breakpoint(larger) {
+      margin-top: 2rem;
+    }
+    // 900px
+    @include ut.breakpoint(large) {
+      margin-top: 1rem;
+    }
+    //700px
+    @include ut.breakpoint(medium) {
+      font-size: 1.3rem;
+    }
+    // 425px:
+    @include ut.breakpoint(small) {
+      // font-size: 0.62rem;
+      // margin-top: 0.5rem;
+    }
+    //375px
+    @include ut.breakpoint(xSmall) {
+      // font-size: 0.47rem;
+    }
   }
 }
 
@@ -86,6 +133,26 @@
   margin: 0 0 1.4rem;
   color: #0071e9;
   font-size: 1rem;
+  // 1024px
+  @include ut.breakpoint(larger) {
+    font-size: 0.9rem;
+  }
+  // 900px
+  @include ut.breakpoint(large) {
+    font-size: 0.7rem;
+  }
+  //700px
+  @include ut.breakpoint(medium) {
+    font-size: 0.4rem;
+    margin: 0 0 0.5rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.35rem;
+  }
+  //375px
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.25rem;
+  }
 }
 
 .login__modeSwitch {
@@ -96,12 +163,15 @@
   grid-template-columns: 1fr 1fr;
   gap: 0.35rem;
   margin-bottom: 1.2rem;
+  @include ut.breakpoint(medium) {
+    margin-bottom: 0rem;
+  }
 }
 
 .login__modeBtn {
   border: none;
   border-radius: 999px;
-  font-family: cursive;
+  font-family: "ActualComicSans", cursive;
   font-size: 1rem;
   font-weight: 700;
   color: #3d405b;
@@ -118,6 +188,18 @@
   &:hover {
     color: #ffffff;
     background: #0071e9;
+  }
+  //700px
+  @include ut.breakpoint(medium) {
+    font-size: 0.6rem;
+  }
+  //700px
+  @include ut.breakpoint(small) {
+    font-size: 0.5rem;
+  }
+  //375px
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.35rem;
   }
 }
 
@@ -136,6 +218,24 @@
     font-weight: 700;
     text-decoration: none;
   }
+  @include ut.breakpoint(larger) {
+    // font-size: 1.2rem;
+  }
+  // 900px
+  @include ut.breakpoint(large) {
+    font-size: 0.8rem;
+  }
+  //700px
+  @include ut.breakpoint(medium) {
+    font-size: 0.4rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.34rem;
+  }
+  //375px
+  // @include ut.breakpoint(xSmall) {
+  //   font-size: 0.3rem;
+  // }
 }
 
 .login-form {
@@ -150,6 +250,26 @@
 
     input {
       padding-right: 3.75rem;
+      @include ut.breakpoint(larger) {
+        // font-size: 1.2rem;
+      }
+      // 900px
+      @include ut.breakpoint(large) {
+        font-size: 0.9rem;
+      }
+      //700px
+      @include ut.breakpoint(medium) {
+        font-size: 0.7rem;
+        display: flex;
+        padding: 0.6rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.6rem;
+      }
+      //375px
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.45rem;
+      }
     }
   }
 
@@ -162,6 +282,19 @@
     color: #0071e9;
     background: #fffcf7;
     transition: all 0.3s ease;
+    @include ut.breakpoint(large) {
+      font-size: 0.9rem;
+    }
+    @include ut.breakpoint(medium) {
+      font-size: 0.7rem;
+      padding: 0.6rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.6rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.45rem;
+    }
 
     &:focus {
       outline: none;
@@ -211,6 +344,10 @@
 
 .input__peekIcon {
   transform-origin: center;
+  @include ut.breakpoint(small) {
+    height: 0.9rem;
+    width: 0.9rem;
+  }
 }
 
 .input__peek--active .input__peekIcon {
@@ -254,12 +391,22 @@
   padding: 0.85rem 1rem;
   background: #3d405b;
   color: #f2e9e4;
-  font-family: cursive;
+  font-family: "ActualComicSans", cursive;
   font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.35s ease;
 
+  @include ut.breakpoint(medium) {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.7rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.6rem;
+  }
   &:hover:not(:disabled) {
     background: #0071e9;
     transform: translateY(-1px);
@@ -275,7 +422,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #81b29a;
+  color: #0071e9;
   font-size: 0.95rem;
   margin-top: 0.25rem;
 
@@ -326,6 +473,16 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
+  @include ut.breakpoint(large) {
+    font-size: 0.7rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.6rem;
+  }
+  //375px
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.42rem;
+  }
 
   &:hover:not(:disabled) {
     color: #0071e9;
@@ -364,5 +521,23 @@
     text-underline-offset: 4px;
 
     // border: 5px solid #81b29a;
+  }
+  @include ut.breakpoint(larger) {
+    // font-size: 1.2rem;
+  }
+  // 900px
+  @include ut.breakpoint(large) {
+    font-size: 1rem;
+  }
+  //700px
+  @include ut.breakpoint(medium) {
+    font-size: 0.6rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.5rem;
+  }
+  //375px
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.3rem;
   }
 }

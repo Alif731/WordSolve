@@ -1,0 +1,6571 @@
+@use "../../util/breakpoint" as ut;
+
+$worksheet-bg: #fffaf1;
+$worksheet-surface: #ffffff;
+$worksheet-surface-soft: #f9f1ea;
+$worksheet-surface-muted: #f7efe4;
+$worksheet-border: rgba(242, 204, 143, 0.72);
+$worksheet-border-strong: rgba(199, 104, 79, 0.36);
+$worksheet-text: #3d405b;
+$worksheet-text-soft: #9198a5;
+$worksheet-accent: #c7684f;
+$worksheet-accent-soft: #f8dfd1;
+$worksheet-gold: #f2cc8f;
+$worksheet-sage: #81b29a;
+$worksheet-sage-soft: #edf7f0;
+$worksheet-shadow:
+  0 20px 40px rgba(61, 64, 91, 0.08),
+  inset 0 1px 0 rgba(255, 255, 255, 0.92);
+
+/* --- Schema Type Badges --- */
+.schema-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.45rem 1rem;
+  // flex: 1;
+  border-radius: 16px;
+  font-size: inherit;
+  font-weight: 800;
+  text-transform: capitalize; /* Turns "combine" into "Combine" */
+  letter-spacing: 0.02em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 4px 10px rgba(61, 64, 91, 0.04);
+
+  @include ut.breakpoint(medium) {
+    flex: 1;
+  }
+}
+.schema-badge--practice {
+  background: linear-gradient(135deg, #e6f7f4 0%, #d1efe9 100%);
+  border: 1px solid rgba(118, 196, 184, 0.6);
+  color: #3a7a70;
+}
+
+/* 1. Combine (Parts to Total) - Soft Teal/Green */
+.schema-badge--combine {
+  background: linear-gradient(135deg, #e6f7f4 0%, #d1efe9 100%);
+  border: 1px solid rgba(118, 196, 184, 0.6);
+  color: #3a7a70;
+}
+
+/* 2. Change (Start, Change, End) - Soft Orange/Gold */
+.schema-badge--change {
+  background: linear-gradient(135deg, #fff3e6 0%, #ffe6cc 100%);
+  border: 1px solid rgba(240, 168, 104, 0.6);
+  color: #a85f1c;
+}
+
+/* 3. Compare (Bigger, Smaller, Difference) - Soft Purple */
+.schema-badge--compare {
+  background: linear-gradient(135deg, #f3e6f7 0%, #e6ccf0 100%);
+  border: 1px solid rgba(186, 126, 214, 0.6);
+  color: #6b3a82;
+}
+
+.worksheet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  // padding: 1.35rem 1.35rem 1.55rem;
+  padding: 1rem 0px;
+  padding-top: 0.6rem;
+  // padding-top: 10.6rem !important;
+  color: $worksheet-text;
+}
+
+/* =========================================
+   THE 3 PROGRESSION STATES
+   ========================================= */
+/* 1. The Container */
+.worksheet-tabs.progression-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0 0.5rem;
+  // margin-bottom: 2rem;
+  @include ut.breakpoint(medium) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* 2. Base Tab Styles */
+.worksheet-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 10px;
+  // padding: 1rem;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  margin-right: 24px;
+  @include ut.breakpoint(large) {
+    font-size: 0.8rem;
+  }
+  @include ut.breakpoint(medium) {
+    padding: 0.5rem;
+    font-size: 0.6rem;
+  }
+  @include ut.breakpoint(small) {
+    padding: 0.3rem;
+    font-size: 0.5rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    padding: 0.1rem;
+    font-size: 0.37rem;
+  }
+}
+
+/* Remove margin from the very last pill */
+.worksheet-tab:last-child {
+  margin-right: 0;
+}
+
+/* 3. The Connecting Line (The Path) */
+.worksheet-tab:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -24px;
+  width: 24px;
+  height: 3px;
+  background: #e2e2e2;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  z-index: -1;
+}
+
+/* STATE 1: COMPLETED (In the past) */
+.worksheet-tab.is-completed {
+  background: #e8f4e9; /* Soft success green */
+  border: 1px solid #81c784;
+  color: #2e7d32;
+}
+
+/* Color the connecting line extending from a completed step! */
+.worksheet-tab.is-completed:not(:last-child)::after {
+  background: #81c784;
+}
+
+/* STATE 2: ACTIVE (Current level) */
+.worksheet-tab.is-active {
+  background: #fff3eb;
+  border: 2px solid #e07a5f; /* Your orange accent */
+  color: #e07a5f;
+  transform: scale(1.05); /* Makes the current step pop out visually */
+  box-shadow: 0 4px 12px rgba(224, 122, 95, 0.15);
+}
+
+/* STATE 3: LOCKED (In the future) */
+.worksheet-tab.is-locked {
+  background: #f8f9fa;
+  border: 1px dashed #d1d5db; /* Dashed line implies it needs to be "filled in" */
+  color: #9ca3af;
+  opacity: 0.7; /* Faded out */
+}
+
+/* Small tweak for the icons if you used the Lucide icons */
+.worksheet-tab .tab-icon {
+  stroke-width: 3px;
+}
+
+// .worksheet-tab {
+//   cursor: default;
+// }
+
+.worksheet-tab.is-active,
+.worksheet-stage-tab.is-active {
+  border-color: rgba(199, 104, 79, 0.5);
+  background: linear-gradient(135deg, #fff3eb 0%, #fffaf5 100%);
+  color: $worksheet-accent;
+}
+
+.worksheet-stage-tab.is-complete {
+  border-color: rgba(129, 178, 154, 0.56);
+  background: $worksheet-sage-soft;
+  color: #44735f;
+}
+.worksheet-tab.is-wrong {
+  background: #fce4ec;
+  border: 1px solid #e57373;
+  color: #c62828;
+}
+.worksheet__topline {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.worksheet__topline-main {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+  // justify-content: center;
+  min-width: 0;
+  margin: 0 0.5rem;
+  margin: auto;
+  @include ut.breakpoint(large) {
+    margin: 0;
+  }
+}
+
+.worksheet-title {
+  // text-transform: capitalize;
+
+  // flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // margin-left: 0.5rem;
+  width: fit-content;
+  padding: 0.5rem;
+  font-weight: 700;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #3d405b 0%, #1f2235 100%);
+  border: 1px solid rgba(242, 204, 143, 0.65);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    0 6px 16px rgba(61, 64, 91, 0.04);
+  // color: $worksheet-accent;
+  color: white;
+  font-size: inherit;
+  font-weight: 800;
+  text-transform: lowercase;
+  letter-spacing: 0.01em;
+  @include ut.breakpoint(medium) {
+    flex: 1;
+  }
+  // @include ut.breakpoint(xLarge) {
+  //   font-size: 1rem;
+  // }
+  // @include ut.breakpoint(large) {
+  //   font-size: 0.8rem;
+  // }
+  // @include ut.breakpoint(medium) {
+  //   font-size: 1rem;
+  // }
+  // @include ut.breakpoint(small) {
+  //   font-size: 0.8rem;
+  // }
+  // @include ut.breakpoint(xSmall) {
+  //   font-size: 0.6rem;
+  // }
+}
+
+.worksheet-feedback,
+.worksheet-solve__equation,
+.worksheet-verification__equation {
+  border-radius: 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96) 0%,
+    #fbf2e8 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(242, 204, 143, 0.58),
+    0 8px 20px rgba(61, 64, 91, 0.05);
+}
+
+.worksheet-prompt {
+  padding: 0.95rem 1.1rem;
+  // line-height: 1.45;
+  font-family: "ActualComicSans", cursive;
+  border-left: 5px solid #e07a5f;
+  font-weight: 700;
+  padding: 0.5rem;
+  color: #3d405b;
+  background-color: rgba(129, 178, 154, 0.1450980392);
+  font-size: 1.15rem;
+  border-radius: 10px;
+  @include ut.breakpoint(xLarge) {
+    font-size: 1rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 0.9rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.8rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.7rem;
+  }
+}
+
+// ---------------------------------------------- Module 1 (Card-Based Toggle UI) ----------------------------------------
+
+// .variable-identification {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 1.5rem;
+//   padding: 0rem 0.5rem;
+// }
+
+// .variable-identification__sentences {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 0.85rem;
+// }
+
+// .variable-sentence {
+//   display: grid;
+//   grid-template-columns: 2.2rem 1fr;
+//   gap: 1.2rem;
+//   align-items: center;
+//   padding: 0.8rem 1.2rem;
+//   border: 2px solid #e2e8f0;
+//   border-radius: 12px;
+//   background: #fff;
+//   box-shadow: 0 4px 0 #f1f5f9;
+//   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+//   @include ut.breakpoint(medium) {
+//     font-size: 0.85rem;
+//   }
+//   @include ut.breakpoint(small) {
+//     font-size: 0.75rem;
+//   }
+
+//   &:hover {
+//     transform: translateY(-2px);
+//     border-color: #cbd5e1;
+//   }
+
+//   span {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     width: 2.2rem;
+//     height: 2.2rem;
+//     border-radius: 8px;
+//     background: #3d405b;
+//     font-weight: 900;
+//     color: #fff;
+//     box-shadow: 3px 3px 0 #e9b50b;
+//     @include ut.breakpoint(medium) {
+//       width: 1.7rem;
+//       height: 1.7rem;
+//     }
+//   }
+
+//   p {
+//     margin: 0;
+//     font-size: 1.05rem;
+//     font-weight: 600;
+//     color: #3d405b;
+//     line-height: 1.4;
+//     @include ut.breakpoint(medium) {
+//       font-size: 0.85rem;
+//     }
+//     @include ut.breakpoint(small) {
+//       font-size: 0.75rem;
+//     }
+//   }
+// }
+
+// .variable-identification__instruction {
+//   font-size: 0.92rem;
+//   font-weight: 600;
+//   color: #64748b;
+//   line-height: 1.5;
+//   margin: 0;
+//   padding: 0 0.25rem;
+//   strong {
+//     color: #3d405b;
+//   }
+//   @include ut.breakpoint(small) {
+//     font-size: 0.8rem;
+//   }
+// }
+
+// /* --- Variable Cards --- */
+// .variable-cards {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 1.25rem;
+// }
+
+// .variable-card {
+//   border: 3px solid #d7dde5;
+//   border-radius: 16px;
+//   background: #fff;
+//   box-shadow: 0 5px 0 #d7dde5;
+//   padding: 1rem 1.2rem;
+//   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+//   position: relative;
+
+//   @include ut.breakpoint(medium) {
+//     padding: 0.75rem 0.9rem;
+//   }
+
+//   &__header {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     margin-bottom: 0.75rem;
+//   }
+
+//   &__name {
+//     font-size: 1.2rem;
+//     font-weight: 900;
+//     color: #3d405b;
+//     text-transform: capitalize;
+//     &::before {
+//       content: "";
+//       display: inline-block;
+//       width: 6px;
+//       height: 1.2rem;
+//       background: #e9b50b;
+//       border-radius: 10px;
+//       margin-right: 10px;
+//       vertical-align: text-bottom;
+//     }
+//     @include ut.breakpoint(medium) {
+//       font-size: 1.05rem;
+//     }
+//     @include ut.breakpoint(small) {
+//       font-size: 0.95rem;
+//     }
+//   }
+
+//   &__badge {
+//     font-size: 0.7rem;
+//     font-weight: 800;
+//     padding: 0.25rem 0.6rem;
+//     border-radius: 8px;
+//     text-transform: uppercase;
+//     letter-spacing: 0.04em;
+//     &--given {
+//       background: #dcfce7;
+//       color: #166534;
+//       border: 1.5px solid #86efac;
+//     }
+//     &--find {
+//       background: #ede9fe;
+//       color: #5b21b6;
+//       border: 1.5px solid #c4b5fd;
+//     }
+//   }
+
+//   &__toggles {
+//     display: grid;
+//     grid-template-columns: 1fr 1fr;
+//     gap: 0.75rem;
+//     margin-bottom: 0.5rem;
+//     @include ut.breakpoint(small) {
+//       gap: 0.5rem;
+//     }
+//   }
+
+//   &__value-row {
+//     display: flex;
+//     align-items: center;
+//     gap: 0.75rem;
+//     margin-top: 0.5rem;
+
+//     span {
+//       font-size: 0.8rem;
+//       font-weight: 800;
+//       color: #64748b;
+//       text-transform: uppercase;
+//       letter-spacing: 0.04em;
+//       white-space: nowrap;
+//     }
+
+//     input {
+//       flex: 1;
+//       height: 3rem;
+//       border: 2px solid #cbd5e1;
+//       border-radius: 10px;
+//       padding: 0 1rem;
+//       font-size: 1.3rem;
+//       font-weight: 700;
+//       color: #5f91e0;
+//       background: #fff;
+//       text-align: center;
+//       transition: all 0.2s ease;
+
+//       &:hover:not(:disabled) {
+//         border-color: #5f91e0;
+//       }
+//       &:focus {
+//         border-color: #6fa3f8;
+//         outline: none;
+//         box-shadow: 0 0 0 4px rgba(111, 163, 248, 0.15);
+//       }
+//       &:disabled {
+//         background: #f8fafc;
+//         cursor: not-allowed;
+//       }
+//       @include ut.breakpoint(medium) {
+//         height: 2.5rem;
+//         font-size: 1.1rem;
+//       }
+//     }
+//   }
+
+//   &__find-note {
+//     margin: 0.5rem 0 0;
+//     font-size: 0.9rem;
+//     color: #7c3aed;
+//     font-style: italic;
+//     em {
+//       font-weight: 600;
+//     }
+//   }
+
+//   // --- SUCCESS STATE ---
+//   &.is-correct {
+//     border-color: #10b981;
+//     box-shadow: 0 5px 0 #10b981;
+//     background: #f0fdf4;
+//     pointer-events: none;
+
+//     .variable-card__name::before {
+//       background: #10b981;
+//     }
+//     input {
+//       border-color: #10b981;
+//       background: #f0fdf4;
+//       color: #065f46;
+//     }
+
+//     &::after {
+//       content: "✓";
+//       position: absolute;
+//       top: -10px;
+//       right: -10px;
+//       width: 28px;
+//       height: 28px;
+//       background: #10b981;
+//       color: white;
+//       border: 3px solid #fff;
+//       border-radius: 50%;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       font-size: 1rem;
+//       font-weight: 900;
+//       box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+//       z-index: 10;
+//       animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+//     }
+//   }
+
+//   // --- ERROR STATE ---
+//   &.is-wrong {
+//     border-color: #f43f5e;
+//     box-shadow: 0 5px 0 #f43f5e;
+//     background: #fff1f2;
+//     animation: rowShake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+
+//     .variable-card__name::before {
+//       background: #f43f5e;
+//     }
+//     input {
+//       border-color: #f43f5e;
+//       color: #9f1239;
+//     }
+
+//     &::after {
+//       content: "✕";
+//       position: absolute;
+//       top: -10px;
+//       right: -10px;
+//       width: 28px;
+//       height: 28px;
+//       background: #f43f5e;
+//       color: white;
+//       border: 3px solid #fff;
+//       border-radius: 50%;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       font-size: 1rem;
+//       font-weight: 900;
+//       box-shadow: 0 4px 10px rgba(244, 63, 94, 0.4);
+//       z-index: 10;
+//     }
+//   }
+
+//   // --- REVEALED STATE ---
+//   &.is-revealed {
+//     border-color: #10b981;
+//     box-shadow: 0 5px 0 #10b981;
+//     background: #f0fdf4;
+//     pointer-events: none;
+//     .variable-card__name::before {
+//       background: #10b981;
+//     }
+//     input {
+//       border-color: #10b981;
+//       background: #f0fdf4;
+//       color: #065f46;
+//     }
+//   }
+// }
+
+// /* --- Toggle Buttons --- */
+// .variable-toggle {
+//   font-family: "ActualComicSans", cursive;
+
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 0.65rem 0.5rem;
+//   border: 2px solid #d1d5db;
+//   border-radius: 10px;
+//   background: #fff;
+//   font-size: 0.85rem;
+//   font-weight: 700;
+//   color: #64748b;
+//   cursor: pointer;
+//   transition: all 0.2s ease;
+//   text-align: center;
+//   line-height: 1.3;
+
+//   @include ut.breakpoint(medium) {
+//     font-size: 0.78rem;
+//     padding: 0.5rem 0.4rem;
+//   }
+//   @include ut.breakpoint(small) {
+//     font-size: 0.7rem;
+//   }
+
+//   &:hover:not(:disabled) {
+//     border-color: #94a3b8;
+//     background: #f8fafc;
+//     transform: translateY(-1px);
+//   }
+
+//   &:disabled {
+//     opacity: 0.7;
+//     cursor: not-allowed;
+//   }
+
+//   &--given.is-active {
+//     border-color: #10b981;
+//     background: #f0fdf4;
+//     color: #065f46;
+//     box-shadow: 0 3px 0 #10b981;
+//   }
+
+//   &--find.is-active {
+//     border-color: #7c3aed;
+//     background: #f5f3ff;
+//     color: #5b21b6;
+//     box-shadow: 0 3px 0 #7c3aed;
+//   }
+// }
+
+// /* --- Feedback Bar --- */
+// .variable-feedback-bar {
+//   padding: 0.85rem 1.2rem;
+//   border-radius: 12px;
+//   font-size: 0.95rem;
+//   font-weight: 700;
+//   text-align: center;
+//   animation: fadeIn 0.3s ease;
+
+//   @include ut.breakpoint(small) {
+//     font-size: 0.82rem;
+//     padding: 0.7rem 0.9rem;
+//   }
+
+//   &--success {
+//     background: #dcfce7;
+//     color: #166534;
+//     border: 2px solid #86efac;
+//   }
+
+//   &--error {
+//     background: #fff1f2;
+//     color: #9f1239;
+//     border: 2px solid #fda4af;
+//   }
+// }
+
+// @keyframes fadeIn {
+//   from {
+//     opacity: 0;
+//     transform: translateY(8px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
+
+// /* --- Mobile Responsiveness --- */
+// @media (max-width: 720px) {
+//   .variable-identification {
+//     padding: 0;
+//   }
+//   .variable-card__toggles {
+//     grid-template-columns: 1fr;
+//   }
+// }
+
+// /* --- Horizontal Card Container --- */
+// .variable-row-horizontal {
+//   display: flex;
+//   align-items: center;
+//   background: #ffffff;
+//   border: 1px solid #e2e8f0;
+//   border-radius: 12px;
+//   padding: 1.25rem 1.5rem;
+//   margin-bottom: 1rem;
+//   gap: 2rem;
+//   transition: all 0.2s ease;
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+// }
+
+// .variable-row-horizontal.is-correct {
+//   border-color: #10b981;
+//   background-color: #f0fdf4;
+// }
+
+// .variable-row-horizontal.is-wrong {
+//   border-color: #ef4444;
+//   background-color: #fef2f2;
+// }
+
+// /* --- Left Column: Variable Name --- */
+// .variable-row-horizontal__name {
+//   flex: 1;
+//   font-weight: 800;
+//   font-size: 1.1rem;
+//   color: #334155;
+//   position: relative;
+//   padding-left: 1rem;
+// }
+
+// /* The Yellow Accent Bar */
+// .variable-row-horizontal__name::before {
+//   content: "";
+//   position: absolute;
+//   left: 0;
+//   top: 50%;
+//   transform: translateY(-50%);
+//   width: 4px;
+//   height: 24px;
+//   background-color: #eab308; /* Classic yellow accent */
+//   border-radius: 4px;
+// }
+
+// /* --- Right Column: The Split Controls --- */
+// .variable-row-horizontal__controls {
+//   display: flex;
+//   gap: 1.5rem;
+//   flex: 2; /* Takes up more space than the name */
+// }
+
+// .control-group {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 0.4rem;
+//   flex: 1; /* Splits the right area equally 50/50 */
+// }
+
+// /* "ROLE" and "VALUE" tiny headers */
+// .control-label {
+//   font-size: 0.7rem;
+//   font-weight: 800;
+//   color: #64748b;
+//   letter-spacing: 0.5px;
+//   text-transform: uppercase;
+// }
+
+// /* The Input Box */
+// .control-group input {
+//   width: 100%;
+//   height: 44px; /* Matches the typical CustomSelect height */
+//   padding: 0 1rem;
+//   border: 1px solid #cbd5e1;
+//   border-radius: 8px;
+//   font-family: inherit;
+//   font-weight: 600;
+//   font-size: 1rem;
+//   color: #334155;
+//   text-align: center;
+//   transition: all 0.2s;
+// }
+
+// .control-group input:focus {
+//   outline: none;
+//   border-color: #3b82f6;
+//   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+// }
+
+// .control-group input:disabled {
+//   background: #f8fafc;
+//   color: #94a3b8;
+// }
+
+// /* The Striped Placeholder for "Need to Find" */
+// .find-placeholder {
+//   width: 100%;
+//   height: 44px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   border: 1px dashed #cbd5e1;
+//   border-radius: 8px;
+//   /* Creates the nice diagonal stripes from your screenshot */
+//   background: repeating-linear-gradient(
+//     45deg,
+//     #f8fafc,
+//     #f8fafc 10px,
+//     #f1f5f9 10px,
+//     #f1f5f9 20px
+//   );
+//   color: #94a3b8;
+//   font-weight: 800;
+//   font-size: 1.2rem;
+// }
+
+// /* Mobile Responsiveness */
+// @media (max-width: 768px) {
+//   .variable-row-horizontal {
+//     flex-direction: column;
+//     align-items: flex-start;
+//     gap: 1rem;
+//   }
+//   .variable-row-horizontal__controls {
+//     width: 100%;
+//     gap: 1rem;
+//   }
+// }
+
+// /* --- WINNING STATE (Correct) --- */
+// .variable-row-horizontal.is-correct {
+//   border: 3px solid #10b981; /* Thick green border */
+//   background-color: #f0fdf4;
+//   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+//   position: relative; /* Needed for the floating badge */
+// }
+
+// /* Automatically adds the Green Checkmark Badge */
+// .variable-row-horizontal.is-correct::after {
+//   content: "✓";
+//   position: absolute;
+//   top: -12px;
+//   right: -12px;
+//   width: 28px;
+//   height: 28px;
+//   background-color: #10b981;
+//   color: #ffffff;
+//   border-radius: 50%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   font-size: 16px;
+//   font-weight: 900;
+//   box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+//   z-index: 10;
+// }
+
+// /* Make the locked text deep green to match the winning state */
+// .variable-row-horizontal.is-correct .control-group input:disabled,
+// .variable-row-horizontal.is-correct
+//   .wizard-select.is-disabled
+//   .wizard-select__trigger {
+//   color: #047857;
+//   font-weight: 800;
+//   background-color: transparent;
+//   border-color: rgba(16, 185, 129, 0.3);
+// }
+
+// .variable-row-horizontal.is-correct .find-placeholder {
+//   border-color: rgba(16, 185, 129, 0.3);
+//   color: #047857;
+//   background: rgba(16, 185, 129, 0.1);
+// }
+
+// /* --- LOSING STATE (Wrong) --- */
+// .variable-row-horizontal.is-wrong {
+//   border: 3px solid #ef4444; /* Thick red border */
+//   background-color: #fef2f2;
+//   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+//   position: relative;
+//   animation: shake 0.4s ease-in-out; /* Adds a little error shake! */
+// }
+
+// /* Automatically adds the Red X Badge */
+// .variable-row-horizontal.is-wrong::after {
+//   content: "✕";
+//   position: absolute;
+//   top: -12px;
+//   right: -12px;
+//   width: 28px;
+//   height: 28px;
+//   background-color: #ef4444;
+//   color: #ffffff;
+//   border-radius: 50%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   font-size: 14px;
+//   font-weight: 900;
+//   box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+//   z-index: 10;
+// }
+
+// /* The Error Shake Animation */
+// @keyframes shake {
+//   0%,
+//   100% {
+//     transform: translateX(0);
+//   }
+//   25% {
+//     transform: translateX(-4px);
+//   }
+//   75% {
+//     transform: translateX(4px);
+//   }
+// }
+
+/* --- Main Wrapper --- */
+.variable-identification {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 0rem 0.5rem;
+}
+
+/* --- Sentence List (Top) --- */
+.variable-identification__sentences {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.variable-sentence {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 1.2rem;
+  align-items: center;
+  // padding: 0.8rem 1.2rem;
+  padding: 0.4rem 0.8rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 0 #f1f5f9;
+
+  @include ut.breakpoint(medium) {
+    font-size: 0.85rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.75rem;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 8px;
+    background: #3d405b;
+    font-weight: 900;
+    color: #fff;
+    box-shadow: 3px 3px 0 #e9b50b;
+  }
+  p {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #3d405b;
+    @include ut.breakpoint(medium) {
+      font-size: 0.85rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+/* --- Variable Cards (Horizontal Layout) --- */
+.variable-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  transform-origin: top center;
+  // overflow: hidden; // clips the scaled content
+  will-change: transform, opacity;
+
+  transform: scaleY(0);
+  opacity: 0;
+
+  &.animate-unfold {
+    animation: variableCardsUnfold 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+}
+
+@keyframes variableCardsUnfold {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.variable-row-horizontal {
+  display: flex;
+
+  align-items: center;
+  background: #ffffff;
+  border: 3px solid #d7dde5; /* Matches old card border weight */
+  border-radius: 16px;
+  // padding: 1.25rem 1.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  gap: 2rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 5px 0 #d7dde5; /* Matches old card shadow */
+  position: relative;
+
+  @include ut.breakpoint(large) {
+    display: block;
+  }
+  @include ut.breakpoint(medium) {
+    flex-direction: column;
+  }
+}
+
+.variable-row-horizontal__name {
+  flex: 1;
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: #3d405b;
+  text-transform: capitalize;
+  position: relative;
+  padding-left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  @include ut.breakpoint(large) {
+    margin-bottom: 1rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 1rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.9rem;
+  }
+
+  /* Yellow Accent Bar */
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 1.2rem;
+    background-color: #e9b50b;
+    border-radius: 10px;
+  }
+}
+// ----------------------------- Module 1 OverLapping Fix -------------------------------------------
+
+/* 1. Elevate the entire variables block ABOVE the submit button */
+.variable-identification {
+  position: relative;
+  z-index: 50; /* Beats the button's z-index: 10 */
+}
+/* 2. Prevent dropdowns from hiding behind the row below them */
+.variable-row-horizontal {
+  position: relative;
+  z-index: 1;
+
+  /* When the user clicks the dropdown in this specific row, it jumps to the very front */
+  &:focus-within {
+    z-index: 100;
+  }
+}
+
+// ------------------------------------------------------------------------
+
+/* --- Change Schema: Start / Change / End Tag Badges --- */
+.variable-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  @include ut.breakpoint(medium) {
+    font-size: 0.55rem;
+  }
+}
+
+.variable-tag--start {
+  font-family: "ActualComicSans", cursive;
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1.5px solid #93c5fd;
+}
+
+.variable-tag--change {
+  font-family: "ActualComicSans", cursive;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1.5px solid #fcd34d;
+}
+
+.variable-tag--end {
+  font-family: "ActualComicSans", cursive;
+  background: #dcfce7;
+  color: #166534;
+  border: 1.5px solid #86efac;
+}
+
+.bar-model__bottom .changeBar__wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  min-width: 0;
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+.changeBar__wrapper .bar-box {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+}
+
+.changeBar__wrapper .variable-tag {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 0.65rem;
+  font-family: "ActualComicSans", cursive;
+}
+
+// .bar-model__bottom {
+//   padding-top: 14px !important;
+// }
+
+.bar-model__top-wrapper .changeBar__wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.bar-model__top-wrapper .variable-tag {
+  // .equation-box .variable-tag {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.equation-box .variable-tag {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  @include ut.breakpoint(medium) {
+    top: -18px;
+  }
+}
+
+/* ======================================================== */
+/* STEP 2A: Premium Jelly Morph Cards (Maths Wizard)        */
+/* ======================================================== */
+
+.change-identify__options {
+  display: flex;
+  gap: 5.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding-top: 1.5rem;
+  opacity: 0;
+  @include ut.breakpoint(medium) {
+    flex-direction: column;
+    gap: 2.5rem;
+    padding-top: 0rem;
+  }
+  &.animate-unfold {
+    opacity: 0;
+    animation: flyInFromOffScreen 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  }
+}
+
+.change-identify__bar-options {
+  display: flex;
+  gap: 2.5rem; /* Slightly wider gap for the bigger shadows */
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  opacity: 0;
+  &.animate-unfold {
+    opacity: 0;
+    animation: flyInFromOffScreen 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  }
+}
+
+@keyframes flyInFromOffScreen {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh) scale(0.9);
+  }
+  20% {
+    /* Holds the invisibility for a fraction of a second while it travels up the hidden part of the screen */
+    opacity: 0;
+  }
+  60% {
+    /* Fades in smoothly as it overshoots its target */
+    opacity: 1;
+    transform: translateY(-20px) scale(1.02);
+  }
+  80% {
+    transform: translateY(5px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.change-identify__title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0rem 1rem;
+
+  padding: 0.6rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 0 #f1f5f9;
+  margin-bottom: 2rem;
+  // margin-bottom: 1.5rem;
+  @include ut.breakpoint(medium) {
+    margin: 0rem;
+    margin-bottom: 2rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #3d405b;
+    line-height: 1.55;
+    font-family: "ActualComicSans", cursive;
+    @include ut.breakpoint(medium) {
+      font-size: 0.95rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.85rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.75rem;
+    }
+  }
+
+  strong {
+    color: #e07a5f;
+    font-weight: 700;
+    font-style: normal;
+  }
+}
+
+.change-identify__title-icon {
+  padding: 0 0.1rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #fff3ee 0%, #ffe8dc 100%);
+  border: 1px solid rgba(199, 80, 58, 0.2);
+  color: #c7503a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(199, 80, 58, 0.12);
+
+  @include ut.breakpoint(small) {
+    width: 38px;
+    height: 40px;
+  }
+  // @include ut.breakpoint(xSmall) {
+  //   width: 35px;
+  // height: 38px;
+  // }
+}
+
+.change-identify__option.expand-card {
+  position: relative;
+  background: transparent;
+  width: 250px;
+  height: 150px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Make the whole footprint breathe on hover */
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+
+  /* --- TRIGGER EXPANSION (Hover or Selected) --- */
+  &:hover:not(:disabled),
+  &.is-selected,
+  &.is-correct,
+  &.is-wrong {
+    transform: scale(1.02); /* Breathe effect */
+
+    .expand-card__container-image {
+      opacity: 0;
+      transform: scale(0.8);
+      transition-delay: 0s;
+    }
+
+    .expand-card__content {
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0.1s;
+      /* Jelly Card Shadow with Inner Rim Light */
+      box-shadow:
+        inset 0 4px 0 rgba(255, 255, 255, 1),
+        0 10px 0 #cbd5e1,
+        0 15px 30px rgba(61, 64, 91, 0.12);
+      @include ut.breakpoint(medium) {
+        width: 80%;
+        height: 80%;
+      }
+      @include ut.breakpoint(xSmall) {
+        width: 70%;
+        height: 70%;
+      }
+    }
+
+    .expand-card__detail {
+      opacity: 1;
+      transform: translateX(0);
+      transition-delay: 0.3s;
+    }
+
+    .expand-card__box-image {
+      top: -24px;
+      right: -16px;
+      opacity: 1;
+      transform: scale(1) rotate(5deg);
+      transition-delay: 0.35s;
+    }
+  }
+
+  /* --- STATUS THEME OVERRIDES (Expanded State) --- */
+
+  /* 1. SELECTED: Slightly pressed, but still 3D with a glowing blue aura */
+  &.is-selected .expand-card__content {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+    /* Pushed to 6px, soft inner blue reflection + rich outer blue aura */
+    box-shadow:
+      inset 0 4px 0 rgba(255, 255, 255, 1),
+      inset 0 -4px 12px rgba(59, 130, 246, 0.12),
+      0 6px 0 #2563eb,
+      0 12px 25px rgba(59, 130, 246, 0.35);
+    transform: translateY(4px);
+  }
+
+  /* 2. CORRECT: Magical Green success state */
+  &.is-correct .expand-card__content {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+    /* Pushed down to 4px, bright green bottom, rich magical green outer glow + inner reflection */
+    box-shadow:
+      inset 0 4px 0 rgba(255, 255, 255, 1),
+      inset 0 -4px 15px rgba(16, 185, 129, 0.2),
+      0 4px 0 #059669,
+      0 0 40px rgba(16, 185, 129, 0.45);
+    transform: translateY(6px);
+    animation: bar-success-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)
+      forwards !important;
+  }
+
+  /* 3. WRONG: Error red, harsh drop */
+  &.is-wrong .expand-card__content {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+    /* Harsh red bottom, sunken red inner shadow, angry red outer glow */
+    box-shadow:
+      inset 0 4px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -4px 12px rgba(239, 68, 68, 0.15),
+      0 6px 0 #dc2626,
+      0 10px 20px rgba(239, 68, 68, 0.25);
+    transform: translateY(4px);
+    animation: shake-option 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) 0.2s
+      forwards;
+  }
+
+  /* 4. ACTIVE (Mouse held down): Organic "Squish" into the page */
+  &:active:not(:disabled) .expand-card__content {
+    /* Translates down AND slightly scales inward for a satisfying jelly squish */
+    transform: translateY(10px) scale(0.98);
+    /* Top highlight dims as it goes into the shadow, bottom 3D vanishes */
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.7),
+      inset 0 4px 8px rgba(0, 0, 0, 0.05),
+      0 0px 0 transparent;
+    transition:
+      transform 0.1s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.1s ease-out;
+  }
+}
+
+/* 1. INITIAL STATE: The Wrapper */
+.expand-card__container-image {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2;
+  pointer-events: none;
+  @include ut.breakpoint(medium) {
+    width: 100px;
+    height: 100px;
+  }
+  @include ut.breakpoint(small) {
+    width: 90px;
+    height: 90px;
+  }
+  @include ut.breakpoint(small) {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+/* 🔥 THE JELLY CIRCLE UPGRADE */
+.expand-card__circle {
+  width: 100%;
+  height: 100%;
+  // border-radius: 50%;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #3d405b;
+
+  /* Massive white top highlight + Dark inner bottom + 3D drop */
+  box-shadow:
+    inset 0 8px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.15),
+    0 10px 0 #3d405b,
+    0 15px 25px rgba(61, 64, 91, 0.2);
+
+  /* Diagonal glass reflection */
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 45%
+  );
+
+  &--increase {
+    background-color: #dcfce7;
+    color: #059669;
+  }
+  &--decrease {
+    background-color: #fee2e2;
+    color: #dc2626;
+  }
+}
+
+/* Default Label */
+.expand-card__default-label {
+  font-family: "ActualComicSans", cursive;
+
+  position: absolute;
+  bottom: -45px;
+  left: 55%;
+  transform: translateX(-50%);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #3d405b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  pointer-events: none;
+  /* Deep Engraved typography effect */
+  text-shadow: 0 1.5px 0 rgba(255, 255, 255, 0.85);
+  @include ut.breakpoint(medium) {
+    font-size: 1rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.9rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.8rem;
+  }
+}
+
+/* 2. EXPANDED STATE: The Card Wrapper */
+.expand-card__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background-color: #ffffff; /* Changed to background-color to layer nicely */
+  padding: 20px 24px;
+
+  width: 130px;
+  height: 130px;
+  border-radius: 65px;
+  border: 4px solid #e2e8f0;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 1;
+  @include ut.breakpoint(medium) {
+    padding: 10px 12px;
+  }
+}
+
+/* Text inside expanded card */
+.expand-card__detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease-in-out;
+
+  .expand-card__title {
+    font-family: "ActualComicSans", cursive;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #3d405b;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+    /* Deep Engraved typography effect */
+    text-shadow: 0 1.5px 0 rgba(255, 255, 255, 0.85);
+    @include ut.breakpoint(medium) {
+      font-size: 1.1rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 1rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.9rem;
+    }
+  }
+
+  .expand-card__subtext {
+    font-family: "ActualComicSans", cursive;
+    font-size: 0.85rem; /* Bumped slightly for readability */
+    font-weight: 800;
+    color: #64748b;
+    background-color: #f1f5f9;
+    padding: 6px 12px;
+    border-radius: 10px;
+    line-height: 1.3;
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Gives the subtext pill depth */
+    @include ut.breakpoint(medium) {
+      font-size: 0.75rem;
+    }
+
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.7rem;
+    }
+    &__increase {
+      color: #059669;
+    }
+    &__decrease {
+      color: #dc2626;
+    }
+  }
+}
+
+/* 🔥 The Pop-Out Mini Icon (Jelly Upgrade) */
+.expand-card__product-image {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  .expand-card__box-image {
+    display: flex;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 64px;
+    height: 64px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    .expand-card__circle {
+      border-width: 3px;
+      /* Mini jelly shadows for the small icon */
+      box-shadow:
+        inset 0 4px 0 rgba(255, 255, 255, 0.9),
+        0 6px 0 #3d405b,
+        0 8px 15px rgba(0, 0, 0, 0.15);
+      background-color: #ffffff;
+      background-image: none; /* Keep the small icon clean without the diagonal glare */
+    }
+  }
+}
+
+@keyframes shake-option {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+// /* --- Step 2b: Bar Model Option Cards --- */
+// .change-identify__bar-options {
+//   display: flex;
+//   gap: 1.5rem;
+//   justify-content: center;
+//   flex-wrap: nowrap; /* Keep cards side-by-side always */
+
+//   /* Keep left and right blocks in the bottom row perfectly inline and equal height */
+//   .static-bar-model__bottom {
+//     align-items: stretch;
+//   }
+// }
+
+// .change-identify__bar-option {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   gap: 0.8rem;
+//   padding: 0.8rem;
+//   border-radius: 16px;
+//   border: 2.5px solid #e0e0e0;
+//   background: #fff;
+//   cursor: pointer;
+//   transition: all 0.2s ease;
+//   flex: 1 1 380px; /* Allow growing and shrinking down from a wide 380px base */
+//   max-width: 380px;
+//   min-width: 0; /* Bulletproof shrinking */
+//   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+//   &:hover:not(:disabled) {
+//     transform: translateY(-2px);
+//     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+//   }
+
+//   &:disabled {
+//     cursor: not-allowed;
+//     opacity: 0.7;
+//   }
+
+//   &.is-selected {
+//     border-color: #81b29a;
+//     background: #f0faf5;
+//   }
+
+//   &.is-correct {
+//     border-color: #2e7d32;
+//     background: #e8f5e9;
+//   }
+
+//   &.is-wrong {
+//     border-color: #c62828;
+//     background: #ffebee;
+//     animation: shake-option 0.4s ease;
+//   }
+// }
+
+// .change-identify__bar-label {
+//   font-weight: 700;
+//   font-size: 0.85rem;
+//   text-transform: uppercase;
+//   letter-spacing: 0.06em;
+//   color: #666;
+// }
+
+// /* --- Static Bar Model Previews --- */
+// .static-bar-model {
+//   width: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   gap: 4px;
+// }
+
+// .static-bar-model__top {
+//   display: flex;
+// }
+
+// .static-bar-model__bottom {
+//   display: flex;
+//   gap: 3px;
+// }
+
+// .static-bar__block {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 0.7rem 0.5rem;
+//   border-radius: 12px;
+//   font-size: 0.75rem;
+//   font-weight: 700;
+//   text-transform: capitalize;
+//   min-height: 54px;
+//   text-align: center;
+// }
+
+// .static-bar__block--start {
+//   background: #dbeafe;
+//   color: #1e40af;
+//   border: 1.5px solid #93c5fd;
+// }
+
+// .static-bar__block--change {
+//   background: #fef3c7;
+//   color: #92400e;
+//   border: 1.5px solid #fcd34d;
+// }
+
+// .static-bar__block--end {
+//   background: #dcfce7;
+//   color: #166534;
+//   border: 1.5px solid #86efac;
+// }
+
+// /* Increase model: End (top, full width), Start + Change (bottom) */
+// .static-bar-model--increase {
+//   .static-bar-model__top .static-bar__block {
+//     flex: 1;
+//   }
+//   .static-bar-model__bottom .static-bar__block--start {
+//     flex: 6;
+//   }
+//   .static-bar-model__bottom .static-bar__block--change {
+//     flex: 4;
+//   }
+// }
+
+// /* Decrease model: Start (top, full width), End + Change (bottom) */
+// .static-bar-model--decrease {
+//   .static-bar-model__top .static-bar__block {
+//     flex: 1;
+//   }
+//   .static-bar-model__bottom .static-bar__block--end {
+//     flex: 6;
+//   }
+//   .static-bar-model__bottom .static-bar__block--change {
+//     flex: 4;
+//   }
+// }
+
+/* ======================================================== */
+/*  Premium Jelly UI (Maths Wizard)     */
+/* ======================================================== */
+
+/* --- The Outer Card (Bouncy Physics) --- */
+.change-identify__bar-option {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  padding: 1.4rem 2rem; /* Slightly more padding */
+  border-radius: 24px; /* Rounder, friendlier corners */
+  cursor: pointer;
+  outline: none;
+  width: 100%;
+  max-width: 440px;
+
+  /* Chunky Physics with softer, richer drop shadows */
+  border: 3px solid #e2e8f0;
+  box-shadow:
+    0 8px 0 #cbd5e1,
+    0 15px 30px rgba(61, 64, 91, 0.08),
+    inset 0 4px 0 rgba(255, 255, 255, 1); /* Inner rim light */
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Hover state scales up the card AND the inner blocks faintly */
+  &:hover:not(:disabled) {
+    transform: translateY(-6px);
+    box-shadow:
+      0 14px 0 #cbd5e1,
+      0 25px 40px rgba(61, 64, 91, 0.12),
+      inset 0 4px 0 rgba(255, 255, 255, 1);
+
+    .static-bar-model {
+      transform: scale(1.015);
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 #cbd5e1;
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1); /* Faster, snappy press */
+
+    .static-bar-model {
+      transform: scale(0.98);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    filter: grayscale(20%);
+  }
+
+  /* --- CARD STATUS STATES --- */
+  &.is-selected {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    box-shadow: 0 8px 0 #2563eb;
+  }
+
+  /* ======================================================== */
+  /* UPGRADE 3: REWARDING 'CORRECT' STATES                    */
+  /* ======================================================== */
+
+  &.is-correct {
+    background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%) !important;
+    border: 3px solid #4ade80 !important;
+    color: #166534 !important;
+
+    /* A bright, happy green glow */
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.8),
+      0 4px 0 #22c55e,
+      0 0 15px rgba(74, 222, 128, 0.4) !important;
+
+    /* A quick 'pop' animation when it turns correct */
+    animation: successPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes successPop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  &.is-wrong {
+    border-color: #ef4444;
+    background: #fef2f2;
+    box-shadow: 0 8px 0 #dc2626;
+    animation: shake-option 0.4s ease;
+  }
+}
+
+/* --- The Inner Bar Models --- */
+.static-bar-model {
+  font-family: "ActualComicSans", "Comic Sans MS", cursive;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  // gap: 10px; /* Thicker game-style gaps */
+  gap: 0.2rem;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.static-bar-model__top {
+  display: flex;
+}
+.static-bar-model__bottom {
+  display: flex;
+  // gap: 10px;
+  gap: 0.2rem;
+  align-items: stretch;
+}
+
+/* 🔥 THE JELLY BLOCK EFFECT */
+.static-bar__block {
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 1rem 0.8rem;
+  border-radius: 14px;
+  text-align: center;
+  border: 3px solid; /* Thicker borders to contain the jelly */
+  position: relative;
+  overflow: hidden;
+
+  /* The magic jelly formula: 
+     1. Massive white top highlight
+     2. Dark bottom shadow
+     3. Subtle drop shadow beneath the blocks themselves */
+  box-shadow:
+    inset 0 6px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.05);
+
+  /* Diagonal glass reflection built directly into the background */
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 45%
+  );
+}
+
+/* Deep Engraved Typography */
+.static-bar__title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: capitalize;
+  /* Stamped plastic effect: crisp white shadow on the bottom right */
+  text-shadow: 0 1.5px 0 rgba(255, 255, 255, 0.85);
+}
+
+.static-bar__subtext {
+  font-size: 0.82rem;
+  font-weight: 800;
+  opacity: 0.8;
+  text-transform: lowercase;
+  line-height: 1.15;
+}
+
+/* Block Themes: Vivid colors mixed with high-contrast borders */
+.static-bar__block--start {
+  background-color: #bae6fd;
+  color: #0369a1;
+  border-color: #38bdf8;
+}
+.static-bar__block--change {
+  background-color: #fef08a;
+  color: #a16207;
+  border-color: #facc15;
+}
+.static-bar__block--end {
+  background-color: #bbf7d0;
+  color: #15803d;
+  border-color: #4ade80;
+}
+
+/* Flex sizing ratios */
+.static-bar-model--increase {
+  .static-bar-model__top .static-bar__block {
+    flex: 1;
+  }
+  .static-bar-model__bottom .static-bar__block--start {
+    flex: 5.5;
+  }
+  .static-bar-model__bottom .static-bar__block--change {
+    flex: 4.5;
+  }
+}
+.static-bar-model--decrease {
+  .static-bar-model__top .static-bar__block {
+    flex: 1;
+  }
+  .static-bar-model__bottom .static-bar__block--end {
+    flex: 5.5;
+  }
+  .static-bar-model__bottom .static-bar__block--change {
+    flex: 4.5;
+  }
+}
+
+/* --- Feedback Messages --- */
+.change-identify__feedback {
+  margin-top: 1.2rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  animation: fadeInUp 0.3s ease;
+
+  &--correct {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1.5px solid #81c784;
+  }
+
+  &--wrong {
+    background: #ffebee;
+    color: #c62828;
+    border: 1.5px solid #ef9a9a;
+  }
+}
+
+// 2a -> 2b text hint
+.change-identify__carry-hint {
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+  &__bottom {
+    font-size: 0.8rem;
+  }
+  // gap: 4px;
+  // padding: 0.75rem 1.25rem;
+  // border-radius: 12px;
+  // background: #f0f9ff;
+  // border: 1px solid rgba(59, 130, 246, 0.2);
+  // margin-bottom: 1.25rem;
+  // text-align: center;
+  // font-size: 0.9rem;
+  // color: #3d405b;
+
+  strong {
+    color: #e07a5f;
+    font-weight: 700;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.variable-row-horizontal__controls {
+  display: flex;
+  gap: 1rem;
+  flex: 2;
+  min-width: 0;
+  @include ut.breakpoint(medium) {
+    flex-direction: column;
+  }
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.control-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.control-group input {
+  width: 100%;
+  height: 2.7rem;
+  padding: 0 1rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #5f91e0;
+  text-align: center;
+  min-width: 0;
+  @include ut.breakpoint(large) {
+    font-size: 1rem;
+    height: 2.5rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 0.9rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.8rem;
+  }
+}
+.control-group input,
+.control-group .wizard-select {
+  width: auto;
+  // box-sizing: border-box; /* Ensures padding doesn't push width out */
+}
+// .wizard-select,
+// .control-group input,
+// .find-placeholder {
+//   width: 100%;
+//   height: 3.2rem; /* Fixed height is mandatory */
+//   box-sizing: border-box; /* This is the key: padding is INCLUDED in the 100% width */
+// }
+
+.find-placeholder {
+  width: 100%;
+  height: 2.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #94a3b8;
+  font-weight: 800;
+  background: repeating-linear-gradient(
+    45deg,
+    #f8fafc,
+    #f8fafc 10px,
+    #f1f5f9 10px,
+    #f1f5f9 20px
+  );
+  @include ut.breakpoint(large) {
+    font-size: 1rem;
+    height: 2.5rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 0.9rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.8rem;
+  }
+}
+
+/* --- Winning/Losing Feedback --- */
+.variable-row-horizontal.is-correct {
+  border: 3px solid #10b981;
+  background-color: #f0fdf4;
+  box-shadow: 0 5px 0 #10b981;
+}
+
+.variable-row-horizontal.is-correct::after {
+  content: "✓";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 28px;
+  height: 28px;
+  background: #10b981;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+}
+
+.variable-row-horizontal.is-wrong {
+  border: 3px solid #f43f5e;
+  background-color: #fff1f2;
+  box-shadow: 0 5px 0 #f43f5e;
+  animation: rowShake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.variable-row-horizontal.is-wrong::after {
+  content: "✕";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 28px;
+  height: 28px;
+  background: #f43f5e;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+@keyframes rowShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* --- Feedback Bar --- */
+.variable-feedback-bar {
+  padding: 0.85rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+
+  &--success {
+    background: #dcfce7;
+    color: #166534;
+    border: 2px solid #86efac;
+  }
+  &--error {
+    background: #fff1f2;
+    color: #9f1239;
+    border: 2px solid #fda4af;
+  }
+}
+
+/* --- REVEALED STATE  --- */
+.variable-row-horizontal.is-revealed {
+  border: 3px solid #93c5fd;
+  background-color: #eff6ff;
+  box-shadow: 0 5px 0 #93c5fd;
+  pointer-events: none;
+  position: relative;
+}
+
+/* Badge */
+.variable-row-horizontal.is-revealed::after {
+  content: "✨";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 28px;
+  height: 28px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+  z-index: 10;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.variable-row-horizontal.is-revealed .control-group input:disabled,
+.variable-row-horizontal.is-revealed
+  .wizard-select.is-disabled
+  .wizard-select__trigger {
+  color: #1e40af;
+  font-weight: 800;
+  background-color: #ffffff;
+  border-color: rgba(147, 197, 253, 0.5);
+}
+
+.variable-row-horizontal.is-revealed .find-placeholder {
+  border-color: rgba(147, 197, 253, 0.6);
+  color: #3b82f6;
+  background: repeating-linear-gradient(
+    45deg,
+    #ffffff,
+    #ffffff 10px,
+    #eff6ff 10px,
+    #eff6ff 20px
+  );
+}
+
+// ---------------------------------------------------------------------------------------------
+.equation-board {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  gap: 0.8rem;
+  @include ut.breakpoint(medium) {
+    flex-wrap: nowrap;
+  }
+  @include ut.breakpoint(xSmall) {
+    flex-wrap: wrap;
+    // row-gap: 24px;
+  }
+}
+
+// .equation-board__symbol {
+//   font-size: 2.3rem;
+//   font-weight: 800;
+//   color: $worksheet-text;
+//   line-height: 1;
+// }
+
+.equation-board__symbol {
+  font-family: "ActualComicSans", cursive;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #3d405b; /* Soft slate gray instead of harsh black */
+
+  /* Adds a 3D embossed look to the text */
+  text-shadow:
+    0 2px 0 #cbd5e1,
+    0 4px 4px #3d405b28;
+
+  padding: 0 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+
+  /* Give them a tiny hover bounce just for fun */
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.equation-board__symbol:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+.equation-box {
+  width: 150px;
+  min-width: 92px;
+  min-height: 90px;
+  padding: 0.9rem 0.72rem;
+  border-radius: 22px;
+  border: 1px solid rgba(242, 204, 143, 0.74);
+  background: linear-gradient(180deg, #ffffff 0%, #fcf7ef 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  color: $worksheet-text;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 10px 24px rgba(61, 64, 91, 0.06);
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+  border-bottom: 5px solid #f2cc8f;
+  @include ut.breakpoint(medium) {
+    min-width: 70px;
+    min-height: 70px;
+    padding: 0px 0.5rem;
+  }
+  @include ut.breakpoint(small) {
+    max-width: 60px;
+    min-height: 60px;
+    padding: 0px 0.5rem;
+  }
+
+  strong {
+    font-size: 1.8rem;
+    line-height: 1;
+
+    @include ut.breakpoint(medium) {
+      font-size: 1.3rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 1.1rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 1rem;
+    }
+  }
+
+  // span {
+  .variable-tag-span {
+    font-size: 0.8rem;
+    color: $worksheet-text-soft;
+    text-transform: lowercase;
+    @include ut.breakpoint(medium) {
+      font-size: 0.6rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.5rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.45rem;
+    }
+  }
+}
+
+.equation-box.is-editable {
+  font-family: "ActualComicSans", cursive;
+  border-style: dashed;
+  border-color: rgba(199, 104, 79, 0.7);
+  background: linear-gradient(180deg, #fff7f2 0%, #fffdf9 100%);
+  cursor: pointer;
+  @include ut.breakpoint(medium) {
+    width: 70px;
+    min-width: 70px;
+    min-height: 70px;
+    padding: 0px 0.5rem;
+  }
+  @include ut.breakpoint(small) {
+    min-width: 60px;
+    min-height: 60px;
+    padding: 0px 0.5rem;
+  }
+}
+.equation-box.equation-box--operator.is-fixed {
+  font-family: "ActualComicSans", cursive;
+  border: 2px dashed #94a3b8 !important;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  cursor: default !important;
+  box-shadow: none !important;
+}
+.equation-box.is-fixed {
+  font-family: "ActualComicSans", cursive;
+  @include ut.breakpoint(medium) {
+    min-width: 70px;
+    min-height: 70px;
+    padding: 0.5rem;
+  }
+  @include ut.breakpoint(small) {
+    max-width: 60px;
+    min-height: 60px;
+    padding: 0px 0.5rem;
+  }
+}
+.equation-box.is-fixed strong {
+  font-family: "ActualComicSans", cursive;
+  color: #3d405b !important;
+  // color: #60646b9f !important;
+}
+// .equation-box.is-fixed:focus {
+//   outline: none;
+//   box-shadow: none;
+// }
+
+/* Muted look for fixed boxes ONLY in the bar-to-equation stage */
+.equation-board--bar-stage .equation-box.is-fixed {
+  font-family: "ActualComicSans", cursive;
+  background: #f9fafb !important;
+  border-color: rgba(209, 213, 219, 0.7);
+  border-style: solid;
+  border-bottom: 1px solid rgba(209, 213, 219, 0.7);
+  box-shadow: none;
+  cursor: default;
+  opacity: 0.85;
+  @include ut.breakpoint(medium) {
+    width: 70px;
+    min-width: 70px;
+    min-height: 70px;
+    padding: 0px 0.5rem;
+  }
+  @include ut.breakpoint(small) {
+    // width: 58px;
+    // max-width: 60px;
+    // min-height: 70px;
+    // padding: 0px 0.5rem;
+    max-width: 60px;
+    min-height: 60px;
+    padding: 0px 0.5rem;
+  }
+}
+
+/* 1. Base operator styles  */
+.equation-box.equation-box--operator {
+  min-width: 68px;
+  background: linear-gradient(180deg, #fff5e6 0%, #fffaf3 100%);
+  border-color: rgba(242, 204, 143, 0.98);
+  cursor: pointer;
+  position: relative;
+  @include ut.breakpoint(medium) {
+    width: 70px;
+    min-width: 70px;
+    min-height: 70px;
+    padding: 0px 0.5rem;
+  }
+  @include ut.breakpoint(small) {
+    // width: 58px;
+    // min-width: 58px;
+    // min-height: 70px;
+    // padding: 0px 0.5rem;
+    max-width: 60px;
+    min-height: 60px;
+    padding: 0px 0.5rem;
+  }
+  // @include ut.breakpoint(xSmall) {
+  //   // width: 58px;
+  //   // min-width: 58px;
+  //   // min-height: 70px;
+  //   // padding: 0px 0.5rem;
+  //   min-width: 40px;
+  //   min-height: 40px;
+  //   padding: 0px 0.5rem;
+  // }
+}
+
+/* 1. Correct Answer: Beautiful Sage Green */
+// .equation-box.is-correct {
+//   background: linear-gradient(180deg, #c7fd9b 0%, #e9f6ec 100%) !important;
+//   border-color: rgba(129, 178, 154, 0.8) !important;
+//   box-shadow:
+//     inset 0 1px 0 rgba(255, 255, 255, 0.9),
+//     0 10px 24px rgba(129, 178, 154, 0.15) !important;
+
+//   strong {
+//     color: #44735f; /* Deep green text */
+//   }
+// }
+.equation-box.is-correct {
+  background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  border: 3px solid #4ade80 !important;
+  color: #166534 !important;
+
+  /* A bright, happy green glow */
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.8),
+    0 4px 0 #22c55e,
+    0 0 15px rgba(74, 222, 128, 0.4) !important;
+
+  /* A quick 'pop' animation when it turns correct */
+  animation: successPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes successPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 2. Wrong Answer: Soft Alert Red */
+.equation-box.is-wrong {
+  background-color: black;
+  // background: linear-gradient(180deg, #fff2ef 0%, #fde6e1 100%) !important;
+  border-color: rgba(199, 104, 79, 0.6) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 24px rgba(199, 104, 79, 0.15) !important;
+
+  /* Adds a classic gamified 'shake' when they get it wrong! */
+  animation: errorShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+
+  strong {
+    color: #b65a4f; /* Deep red text */
+  }
+}
+
+/* ======================================================== */
+/* REFERENCE MODE (Pushes the Bar Model to the background)  */
+/* ======================================================== */
+
+.bar-model {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bar-model.is-reference-mode {
+  /* 1. Shrink it slightly so it takes up less mental space */
+  transform: scale(0.94);
+
+  /* 2. Dim it so the bright colors stop grabbing attention */
+  opacity: 0.85;
+
+  /* 3. Cool down the colors slightly so the Equation Board pops more */
+  filter: grayscale(30%);
+
+  /* 4. Optional but recommended: Stop them from clicking it while in equation mode */
+  pointer-events: none;
+}
+
+@keyframes errorShake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.bar-model {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: min(100%, 525px);
+  margin: 0 auto;
+}
+
+.bar-model__top,
+.bar-model__bottom,
+.bar-model__compare-top,
+.bar-model__compare-row,
+.bar-model__compare-gap-track {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 0.1rem;
+}
+// .bar-model__top {
+//   border: 3px solid #cbd5e1;
+//   border-radius: 20px;
+//   background-color: #f1f5f9;
+//   box-shadow:
+//     inset 0 4px 8px rgba(0, 0, 0, 0.04),
+//     0 4px 0 #e2e8f0;
+//   padding: 6px;
+// }
+
+.bar-model__compare-top {
+  padding-left: 0;
+}
+
+.bar-model__compare-bottom {
+  width: 100%;
+}
+
+.bar-model__compare-row {
+  gap: 0;
+  align-items: stretch;
+}
+
+.bar-model__compare-bracket {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.18rem;
+  padding-right: 38%;
+
+  span {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: $worksheet-accent;
+  }
+}
+
+.bar-model__compare-line {
+  flex: 1;
+  border-bottom: 3px solid rgba(61, 64, 91, 0.82);
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    width: 3px;
+    height: 16px;
+    background: rgba(61, 64, 91, 0.82);
+  }
+
+  &::before {
+    left: 0;
+  }
+
+  &::after {
+    right: 0;
+  }
+}
+
+.bar-box {
+  border: 1px solid rgba(242, 204, 143, 0.84);
+  border-radius: 18px;
+  padding: 0.5rem;
+  min-height: 82px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  color: $worksheet-text;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 10px 22px rgba(61, 64, 91, 0.05);
+  min-height: auto;
+
+  strong {
+    font-size: 1.5rem;
+    line-height: 1;
+    @include ut.breakpoint(medium) {
+      font-size: 1.4rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 1.2rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 1.1rem;
+    }
+  }
+
+  span {
+    font-size: 0.76rem;
+    color: $worksheet-text-soft;
+    text-transform: lowercase;
+  }
+}
+
+.bar-box--wide {
+  width: 100%;
+}
+
+.bar-box--segment {
+  min-width: 0;
+  width: auto;
+}
+
+.bar-model--compare-gap {
+  .bar-model__compare-top {
+    width: 100%;
+  }
+}
+
+.bar-model__compare-gap-track {
+  position: relative;
+  align-items: flex-end;
+  gap: 0;
+  align-items: flex-start;
+}
+
+.bar-model__compare-guided-row {
+  display: grid;
+  width: 100%;
+  max-width: 100%;
+  gap: 0;
+  align-items: stretch;
+  position: relative;
+  box-sizing: border-box;
+
+  > * {
+    min-width: 0;
+  }
+
+  > .bar-box {
+    min-width: 0;
+  }
+
+  > .bar-box.bar-box--segment {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.bar-model--compare-gap,
+.bar-model--compare-guided {
+  text-align: left;
+
+  .bar-model__compare-top {
+    justify-content: flex-start;
+  }
+
+  .bar-box--wide {
+    min-height: 74px;
+    border-radius: 6px;
+    border-width: 3px;
+    background: linear-gradient(180deg, #f5e8f7 0%, #eed9f2 100%);
+    border-color: rgba(152, 87, 172, 0.9);
+    box-shadow: none;
+
+    strong {
+      font-size: 2.1rem;
+      color: #553268;
+    }
+
+    span {
+      color: rgba(85, 50, 104, 0.72);
+      text-transform: none;
+    }
+  }
+}
+
+/* =========================================
+   MOD 1: CHANGE SCHEMA (PILL & TRAY THEME)
+   ========================================= */
+.bar-model--change.is-pill-model {
+  // gap: 12px;
+  gap: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+
+  /* --- Top Pill Container --- */
+  .bar-model__top-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* --- Top Pill Box --- */
+  .bar-box--top-pill {
+    // padding: 20px;
+    padding: 0.8rem;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border-radius: 20px;
+    border: 3px solid #cbd5e1;
+    min-height: 75px;
+    background-color: #fff;
+    position: relative;
+    z-index: 2;
+    transition: all 0.15s ease-out;
+
+    /* Default raised state */
+    box-shadow: 0 5px 0 #e2e8f0;
+    transform: translateY(0);
+
+    /* 🔥 FIX 1: Active state gets the Blue Focus Ring, NO shifting! */
+    &.is-active {
+      border-color: #3b82f6 !important;
+      background-color: #ffffff !important;
+      transform: translateY(0) !important; /* Locks it in place */
+      box-shadow:
+        0 0 0 4px rgba(59, 130, 246, 0.2),
+        /* Crisp blue ring */ inset 0 4px 8px rgba(0, 0, 0, 0.05),
+        0 5px 0 #e2e8f0 !important;
+    }
+  }
+
+  /* --- Bottom Tray --- */
+  .bar-model__bottom {
+    box-sizing: border-box;
+    gap: 0.25rem;
+    display: flex;
+    width: 100%;
+    min-height: 75px;
+
+    border: 3px solid #cbd5e1;
+    border-radius: 20px;
+    background-color: #f1f5f9;
+    box-shadow:
+      inset 0 4px 8px rgba(0, 0, 0, 0.04),
+      0 4px 0 #e2e8f0;
+    padding: 4px;
+    position: relative;
+    z-index: 1;
+
+    /* 🔥 FIX 2: Force both inner tokens to stretch to the exact same height */
+    align-items: stretch !important;
+  }
+
+  /* --- Token Wrappers --- */
+  .bar-box-wrapper {
+    position: relative;
+    transition: all 0.15s ease-out;
+
+    &.is-active {
+      transform: translateY(0) !important;
+    }
+
+    &--subtraction.is-active {
+      transform: scale(0.98);
+    }
+  }
+
+  /* --- The Inner Tokens --- */
+  .bar-box--tray-pill {
+    width: 100%;
+    border-radius: 16px;
+    border: 3px solid transparent;
+    background-color: #fff;
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.03);
+    transition: all 0.15s ease;
+
+    /* 🔥 FIX 3: Stop active tokens from floating up/down when clicked */
+    &.is-active {
+      transform: translateY(0) !important;
+    }
+
+    /* 🔥 FIX 4: Token 1 (Orange Theme) gets the crisp ring */
+    &.token-1.is-active {
+      border-color: #f97316 !important;
+      background-color: #ffffff !important;
+      box-shadow:
+        0 0 0 4px rgba(249, 115, 22, 0.2),
+        /* Solid orange ring */ inset 0 4px 10px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* 🔥 FIX 5: Token 2 (Purple Theme) gets the crisp ring */
+    &.token-2.is-active {
+      border-color: #a855f7 !important;
+      background-color: #ffffff !important;
+      box-shadow:
+        0 0 0 4px rgba(168, 85, 247, 0.2),
+        /* Solid purple ring */ inset 0 4px 10px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* Token 2: The Missing Slot (Subtraction) */
+    &.is-subtraction {
+      background-color: rgba(255, 255, 255, 0.4);
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 8px,
+        rgba(148, 163, 184, 0.4) 8px,
+        rgba(148, 163, 184, 0.4) 10px
+      );
+      border: 3px dashed #cbd5e1;
+      box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.08);
+      color: #64748b;
+
+      /* When clicked, turns red */
+      &.is-active {
+        background-image: repeating-linear-gradient(
+          -45deg,
+          transparent,
+          transparent 8px,
+          rgba(248, 113, 113, 0.3) 8px,
+          rgba(248, 113, 113, 0.3) 10px
+        );
+        border-color: #f87171 !important;
+        color: #ef4444 !important;
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+
+        .hide-on-focus {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.compare-gap__left {
+  min-width: 0;
+  width: auto;
+  box-sizing: border-box;
+  padding: 3.5rem 0.5rem 0.2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0;
+
+  &.is-editable {
+    .compare-gap__unknown-card {
+      cursor: pointer;
+    }
+  }
+
+  &.is-active {
+    .compare-gap__unknown-card {
+      border-color: $worksheet-accent;
+      box-shadow:
+        0 0 0 4px rgba(199, 104, 79, 0.14),
+        0 16px 28px rgba(61, 64, 91, 0.09);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.compare-gap__measure,
+.compare-guided__measure {
+  --compare-guide-color: #{rgba(61, 64, 91, 0.82)};
+  position: absolute;
+  left: 0;
+  top: 18px;
+  min-height: 52px;
+  box-sizing: border-box;
+  pointer-events: none;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    background: var(--compare-guide-color);
+    border-radius: 999px;
+  }
+
+  &::before {
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 46px;
+    transform: translateY(-50%);
+  }
+
+  &::after {
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 4px;
+    transform: translateY(-50%);
+  }
+}
+
+.compare-gap__measure.is-active {
+  --compare-guide-color: #{$worksheet-accent};
+}
+
+.compare-gap__unknown-card {
+  min-height: 84px;
+  width: min(160px, 100%);
+  border-radius: 6px;
+  border: 2px dashed rgba(60, 132, 206, 0.75);
+  background: linear-gradient(180deg, #fffdfb 0%, #fff6ef 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 10px 20px rgba(61, 64, 91, 0.05);
+  padding: 0.72rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+  color: $worksheet-text;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+
+  strong {
+    font-size: 2rem;
+    line-height: 1;
+    color: $worksheet-accent;
+  }
+
+  span {
+    font-size: 0.78rem;
+    color: $worksheet-text-soft;
+    text-transform: none;
+  }
+
+  &:hover:enabled {
+    background: linear-gradient(180deg, #fff8f2 0%, #fff0e4 100%);
+  }
+}
+
+.compare-gap__difference {
+  border-width: 3px;
+  min-height: 88px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #fff4c7 0%, #ffe8a3 100%);
+  border-color: rgba(240, 146, 21, 0.95);
+  box-shadow: none;
+
+  strong {
+    color: #5b4630;
+  }
+
+  span {
+    color: rgba(91, 70, 48, 0.8);
+    text-transform: none;
+  }
+}
+
+.compare-guided__unknown-column {
+  position: relative;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  /* Space for L-guide (measure top + arm); ? sits below horizontal line */
+  padding-top: calc(18px + 26px + 6px);
+
+  .compare-guided__measure {
+    width: 100%;
+  }
+}
+
+.compare-guided__unknown {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+  margin: 0 0 0.15rem;
+  box-sizing: border-box;
+}
+
+.compare-guided__mark {
+  display: block;
+  font-size: 2rem;
+  line-height: 1;
+  color: $worksheet-accent;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.compare-guided__difference {
+  min-height: 90px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #fff4c7 0%, #ffe8a3 100%);
+  border-color: rgba(240, 146, 21, 0.95);
+  box-shadow: none;
+
+  strong {
+    color: #5b4630;
+  }
+
+  span {
+    color: rgba(91, 70, 48, 0.8);
+    text-transform: none;
+  }
+}
+
+.bar-box--green {
+  background: linear-gradient(180deg, #f4faef 0%, #edf7db 100%);
+  border-color: rgba(129, 178, 154, 0.72);
+}
+
+.bar-box--blue {
+  background: linear-gradient(180deg, #fffaf2 0%, #fdf0dd 100%);
+  border-color: rgba(242, 204, 143, 0.9);
+}
+
+.bar-box--orange {
+  background: linear-gradient(180deg, #fff5ec 0%, #fde6d5 100%);
+  border-color: rgba(199, 104, 79, 0.42);
+}
+
+.bar-box--purple {
+  background: linear-gradient(180deg, #fff8f3 0%, #f7e5d8 100%);
+  border-color: rgba(199, 104, 79, 0.3);
+}
+
+.bar-box.is-editable {
+  border-style: dashed;
+  cursor: pointer;
+  // background: linear-gradient(
+  //   180deg,
+  //   rgba(255, 255, 255, 0.98) 0%,
+  //   rgba(255, 247, 240, 0.98) 100%
+  // );
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.88),
+    0 10px 22px rgba(61, 64, 91, 0.06);
+}
+
+.equation-box--operator.is-active,
+.equation-box.is-active,
+.bar-box.is-active {
+  border-color: #3d405b;
+  border-style: dashed; /* Gives it that 'waiting for input' look */
+  background: #ffffff !important;
+  z-index: 10; /* Keeps the glowing box above other elements */
+  animation: breathingPulse 2s infinite ease-in-out;
+  cursor: pointer;
+}
+.equation-box.is-active:focus,
+.bar-box.is-active:focus {
+  // animation: none !important;
+  // box-shadow:
+  //   0 0 0 4px rgba(199, 104, 79, 0.25),
+  //   0 12px 24px rgba(61, 64, 91, 0.08) !important;
+  transform: translateY(-1px) !important;
+  border-color: #3d405b !important;
+  background-color: #ffffff !important;
+  animation: activeBreathe 2s ease-in-out infinite !important;
+
+  /* Make the typing cursor a bit thicker and softer */
+  strong::after {
+    width: 3px;
+    border-radius: 2px;
+  }
+}
+.equation-box.is-active strong::after,
+.bar-box.is-active strong::after {
+  content: "|";
+  font-weight: 300;
+  color: $worksheet-accent;
+  position: relative;
+  margin-left: 2px;
+  animation: blinkCaret 1s step-end infinite;
+}
+
+.equation-box.is-active:has(.hide-on-focus) strong::after,
+.bar-box.is-active:has(.hide-on-focus) strong::after {
+  position: absolute;
+  left: 50%;
+  // top: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  margin-left: 0;
+}
+
+.equation-box strong span.hide-on-focus,
+.bar-box strong span.hide-on-focus {
+  font-size: inherit;
+  color: inherit;
+  text-transform: none;
+  color: #3d405b;
+}
+
+// .equation-box:focus .hide-on-focus,
+// .bar-box:focus .hide-on-focus,
+// .equation-box.is-active .hide-on-focus,
+// .bar-box.is-active .hide-on-focus {
+//   display: none;
+// }
+
+.equation-box.is-active .hide-on-focus,
+.bar-box.is-active .hide-on-focus {
+  /* Keep the ? in the DOM to prevent layout shifts (shrinking boxes), just make it invisible */
+  opacity: 0;
+}
+
+/* --- ADD THIS TO KILL THE BROWSER'S UGLY DEFAULT BLACK LINE --- */
+button.bar-box:focus,
+button.equation-box:focus,
+button.bar-box:active,
+button.equation-box:active {
+  outline: none !important; /* Kills the browser focus ring */
+  transform: none !important; /* Kills the browser native button press */
+}
+
+.equation-box.is-active:not(:has(.hide-on-focus)),
+.bar-box.is-active:not(:has(.hide-on-focus)),
+.compare-gap__left.is-active:not(:has(.hide-on-focus)) {
+  animation: none !important;
+  border-style: solid !important; /* Locks it in as a solid, focused box */
+  box-shadow:
+    0 0 0 4px rgba(199, 104, 79, 0.18),
+    0 10px 22px rgba(61, 64, 91, 0.08);
+}
+
+@keyframes activeBreathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 4px rgba(61, 64, 91, 0.3),
+      inset 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(61, 64, 91, 0.15),
+      inset 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* --- KILL THE CURSOR or Type ICON ON SUBMISSION --- */
+.equation-box,
+.bar-box {
+  // When any of the feedback/locked classes are added...
+  &.is-locked,
+  &.is-correct,
+  &.is-wrong {
+    // Target the specific strong tag that holds the cursor
+    strong::after {
+      display: none !important;
+      content: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+/* --- THE 'COMPLETED' FOCUS STATE --- */
+.worksheet.is-completed {
+  //   /* 1. Heavily fade and slightly blur the keypad */
+  //   .worksheet-keypad {
+  //     opacity: 0.3;
+  //     filter: grayscale(100%) blur(1.5px);
+  //     pointer-events: none; // Extra safety so they can't click it
+  //     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  //   }
+
+  //   /* 2. Softly fade the headers and prompt to push attention downwards */
+  .worksheet__topline,
+  // .worksheet-prompt,
+  .worksheet-title,
+  .worksheet-help {
+    opacity: 0.4;
+    pointer-events: none;
+    transition: all 0.6s ease;
+  }
+
+  //   /* 3. Keep the Equation/Bar Model visible for review, but lock interaction */
+  // .equation-board,
+  // .bar-model {
+  // pointer-events: none;
+  /* Optional: drop opacity slightly to 0.8 so the Next button pops even more */
+  // opacity: 0.85;
+  // transition: opacity 0.6s ease;
+  // }
+
+  //   /* 4. Ensure the Actions (Next Button) stay at 100% focus */
+  //   .worksheet-actions {
+  //     position: relative;
+  //     z-index: 10;
+  //     opacity: 1 !important;
+  //     filter: none !important;
+  //   }
+}
+
+/* 4. The Caret Animation */
+@keyframes blinkCaret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.bar-box.is-unknown strong {
+  color: $worksheet-accent;
+}
+
+// ------------------------------------------ Keypad -----------------------
+/* =========================================
+   THE GAMIFIED 3D KEYPAD (COMPACT VERSION)
+   ========================================= */
+
+.worksheet-keypad {
+  width: min(100%, 525px);
+  margin: 0 auto;
+  border-radius: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    #fcf5ed 100%
+  );
+  box-shadow: $worksheet-shadow;
+}
+
+.worksheet-keypad__title {
+  background: linear-gradient(180deg, rgba(61, 64, 91, 0.068) 0%, #fbf2e8 100%);
+  padding: 0.4rem 1rem !important; /* 🔥 Shaved off padding */
+  font-size: 0.9rem; /* 🔥 Slightly smaller text */
+  font-weight: 700;
+  color: $worksheet-text;
+  border-radius: 20px 20px 0 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 12px 24px rgba(61, 64, 91, 0.06);
+}
+
+.worksheet-keypad__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem; /* 🔥 Big space saver: reduced from 0.75rem */
+  padding: 0.6rem;
+  background: transparent;
+}
+
+.worksheet-keypad__key,
+.worksheet-keypad__operator {
+  position: relative;
+  cursor: pointer;
+  min-height: 44px; /* 🔥 Enforced a strict, shorter height */
+  border-radius: 12px; /* Slightly less round to match the shorter height */
+  border: 1px solid rgba(242, 204, 143, 0.8);
+  background: #ffffff;
+  color: $worksheet-text;
+  font-size: 1.25rem; /* 🔥 Scaled down from 1.4rem */
+  font-weight: 800;
+  font-family: "ActualComicSans", cursive;
+
+  /* 🔥 Reduced the 3D thickness from 6px to 4px to save vertical space */
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, 1),
+    0 4px 0 #e6d5c3,
+    0 6px 8px rgba(61, 64, 91, 0.08);
+
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+
+  @include ut.breakpoint(medium) {
+    min-height: 40px;
+    font-size: 1.15rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 1.1rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 1rem;
+  }
+
+  &:hover:enabled {
+    background: #fff3eb;
+    color: $worksheet-accent;
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 4px 0 rgba(255, 255, 255, 1),
+      0 6px 0 #e6d5c3,
+      /* Adjusted for the new depth */ 0 10px 14px rgba(61, 64, 91, 0.12);
+  }
+
+  &:active:enabled {
+    transform: translateY(4px); /* 🔥 Pushes exactly to the new 4px depth */
+    background: #fdf5ef;
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.5),
+      0 0 0 #e6d5c3,
+      0 2px 4px rgba(61, 64, 91, 0.08);
+  }
+}
+
+.worksheet-keypad__operators {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 108px));
+  justify-content: center;
+  gap: 0.75rem; /* 🔥 Reduced gap here too */
+  padding: 0 1.2rem 1rem 1.2rem;
+}
+
+.worksheet-keypad__operator {
+  border-radius: 14px; /* Matched the new button radius */
+}
+
+// .worksheet-keypad {
+//   width: min(100%, 525px);
+//   margin: 0 auto;
+//   border-radius: 20px;
+//   background: linear-gradient(
+//     180deg,
+//     rgba(255, 255, 255, 0.94) 0%,
+//     #fcf5ed 100%
+//   );
+//   box-shadow: $worksheet-shadow;
+//   overflow: hidden;
+//   // animation-delay: 0.15s;
+//   // transition: all 1s ease-in-out;
+//   // // animation-delay: 0.15s;
+//   // opacity: 0;
+//   // transform-origin: bottom center;
+// }
+
+// .worksheet-keypad__title {
+//   background: linear-gradient(180deg, rgba(61, 64, 91, 0.068) 0%, #fbf2e8 100%);
+//   padding: 0.82rem 0.98rem;
+//   font-size: 1rem;
+//   font-weight: 700;
+//   color: $worksheet-text;
+//   // color: #e07a5f;
+//   border-radius: 0;
+//   box-shadow:
+//     inset 0 1px 0 rgba(255, 255, 255, 0.96),
+//     0 12px 24px rgba(61, 64, 91, 0.06);
+//   // box-shadow: inset 0 -1px 0 rgba(242, 204, 143, 0.55);
+// }
+
+// .worksheet-keypad__grid {
+//   display: grid;
+//   grid-template-columns: repeat(3, minmax(0, 1fr));
+//   gap: 0;
+//   background: transparent;
+// }
+
+// .worksheet-keypad__key,
+// .worksheet-keypad__operator {
+//   cursor: pointer;
+//   min-height: 50px;
+//   border: 1px solid rgba(242, 204, 143, 0.46);
+//   background: rgba(255, 255, 255, 0.96);
+//   color: $worksheet-text;
+//   font-size: 1.28rem;
+//   font-weight: 800;
+//   font-family: "ActualComicSans", cursive;
+//   transition:
+//     background 0.2s ease,
+//     color 0.2s ease,
+//     transform 0.2s ease;
+
+//   &:hover:enabled {
+//     background: #fff3eb;
+//     color: $worksheet-accent;
+//   }
+
+//   &:active:enabled {
+//     transform: scale(0.98);
+//   }
+// }
+
+// .worksheet-keypad__operators {
+//   display: grid;
+//   grid-template-columns: repeat(2, minmax(0, 108px));
+//   justify-content: center;
+//   gap: 1rem;
+//   padding: 1.2rem 0;
+// }
+
+// .worksheet-keypad__operator {
+//   border-radius: 18px;
+//   box-shadow:
+//     inset 0 1px 0 rgba(255, 255, 255, 0.95),
+//     0 10px 20px rgba(61, 64, 91, 0.05);
+// }
+
+// /* =========================================
+//    THE GAMIFIED 3D KEYPAD
+//    ========================================= */
+
+// .worksheet-keypad {
+//   width: min(100%, 525px);
+//   margin: 0 auto;
+//   border-radius: 20px;
+//   background: linear-gradient(
+//     180deg,
+//     rgba(255, 255, 255, 0.94) 0%,
+//     #fcf5ed 100%
+//   );
+//   box-shadow: $worksheet-shadow;
+// }
+
+// .worksheet-keypad__title {
+//   background: linear-gradient(180deg, rgba(61, 64, 91, 0.068) 0%, #fbf2e8 100%);
+//   // padding: 0.82rem 0.98rem;
+//   padding: 0.5rem 1rem !important;
+//   font-size: 1rem;
+//   font-weight: 700;
+//   color: $worksheet-text;
+//   border-radius: 20px 20px 0 0;
+//   box-shadow:
+//     inset 0 1px 0 rgba(255, 255, 255, 0.96),
+//     0 12px 24px rgba(61, 64, 91, 0.06);
+// }
+
+// .worksheet-keypad__grid {
+//   display: grid;
+//   grid-template-columns: repeat(3, minmax(0, 1fr));
+//   gap: 0.75rem;
+//   padding: 0.5rem;
+//   background: transparent;
+// }
+
+// .worksheet-keypad__key,
+// .worksheet-keypad__operator {
+//   position: relative;
+//   cursor: pointer;
+//   // min-height: 56px;
+//   border-radius: 14px;
+
+//   border: 1px solid rgba(242, 204, 143, 0.8);
+//   background: #ffffff;
+//   color: $worksheet-text;
+//   font-size: 1.4rem;
+//   font-weight: 800;
+//   font-family: "ActualComicSans", cursive;
+//   box-shadow:
+//     inset 0 4px 0 rgba(255, 255, 255, 1),
+//     0 6px 0 #e6d5c3,
+//     0 8px 12px rgba(61, 64, 91, 0.08);
+//   transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   user-select: none;
+//   @include ut.breakpoint(medium) {
+//     min-height: 46px;
+//     font-size: 1.2rem;
+//   }
+//   @include ut.breakpoint(small) {
+//     font-size: 1.1rem;
+//   }
+//   @include ut.breakpoint(xSmall) {
+//     font-size: 1rem;
+//   }
+
+//   &:hover:enabled {
+//     background: #fff3eb;
+//     color: $worksheet-accent;
+//     transform: translateY(-2px);
+//     box-shadow:
+//       inset 0 4px 0 rgba(255, 255, 255, 1),
+//       0 8px 0 #e6d5c3,
+//       0 12px 16px rgba(61, 64, 91, 0.12);
+//   }
+
+//   &:active:enabled {
+//     transform: translateY(6px);
+//     background: #fdf5ef;
+//     box-shadow:
+//       inset 0 2px 0 rgba(255, 255, 255, 0.5),
+//       0 0 0 #e6d5c3,
+//       0 2px 4px rgba(61, 64, 91, 0.08);
+//   }
+// }
+
+// .worksheet-keypad__operators {
+//   display: grid;
+//   grid-template-columns: repeat(2, minmax(0, 108px));
+//   justify-content: center;
+//   gap: 1rem;
+//   padding: 0 1.2rem 1.2rem 1.2rem;
+// }
+
+// .worksheet-keypad__operator {
+//   border-radius: 18px;
+// }
+
+.worksheet__helper {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  @include ut.breakpoint(large) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.worksheet__helper__div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  @include ut.breakpoint(large) {
+    justify-content: space-between;
+  }
+}
+
+.worksheet-target-hint {
+  // width: min(100%, 560px);
+  // margin: 0.85rem auto 0;
+  padding: 0.72rem 1rem;
+  text-align: center;
+  border-radius: 18px;
+  border: 1px solid rgba(60, 132, 206, 0.25);
+  background: linear-gradient(180deg, #f7fbff 0%, #eef7ff 100%);
+  color: #426486;
+  font-size: 0.97rem;
+  font-weight: 700;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 10px 22px rgba(61, 64, 91, 0.04);
+
+  strong {
+    color: #24588e;
+  }
+}
+
+.worksheet-solve {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 24px;
+  padding: 1rem 1.5rem;
+  box-shadow:
+    0 4px 6px -1px rgba(15, 23, 42, 0.03),
+    0 12px 36px -4px rgba(15, 23, 42, 0.08);
+  gap: 0.5rem;
+  width: min(100%, 450px);
+  margin: 0rem auto;
+  display: flex;
+  flex-direction: column;
+  @include ut.breakpoint(large) {
+    gap: 0.55rem;
+    width: min(100%, 400px);
+  }
+  @include ut.breakpoint(medium) {
+    width: fit-content;
+  }
+  @include ut.breakpoint(small) {
+    // font-size: 0.9rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    // font-size: 0.7rem;
+  }
+}
+
+.worksheet-solve__equation {
+  padding: 1rem;
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #3d405b;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  letter-spacing: 1px;
+  box-shadow: inset 0 2px 4px rgba(15, 23, 42, 0.03);
+  @include ut.breakpoint(medium) {
+    font-size: 1.6rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 1.4rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 1.2rem;
+  }
+}
+
+@keyframes successPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// .worksheet-answer-field {
+//   display: flex;
+//   flex-direction: column;
+//   position: relative;
+
+//   input {
+//     width: 100%;
+//     min-height: 68px;
+//     border-radius: 16px;
+//     border: 2px solid #e2e8f0;
+//     background: #ffffff;
+//     font-size: 2rem;
+//     font-weight: 700;
+//     color: #83ade5;
+//     text-align: center;
+//     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+//     box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02);
+//     &::placeholder {
+//       color: #83ade5;
+//       font-weight: 500;
+//       font-size: 1.25rem;
+//       transition: opacity 0.2s ease;
+//     }
+//     &:hover:not(:disabled) {
+//       border-color: #cbd5e1;
+//     }
+//     &:focus {
+//       outline: none;
+//       border-color: #3b82f6;
+//       background: #ffffff;
+//       box-shadow:
+//         0 0 0 4px rgba(59, 130, 246, 0.12),
+//         0 10px 25px -5px rgba(59, 130, 246, 0.15);
+//       transform: translateY(-2px);
+//       &::placeholder {
+//         opacity: 0.5;
+//       }
+//     }
+//     border-radius: 22px;
+//     border: 1px solid #6fa3f8;
+//     box-shadow:
+//       inset 0 1px 0 rgba(255, 255, 255, 0.96),
+//       0 10px 24px rgba(61, 64, 91, 0.06);
+//     transition:
+//       border-color 0.2s ease,
+//       transform 0.2s ease,
+//       box-shadow 0.2s ease,
+//       background 0.2s ease;
+//     border-bottom: 5px solid #6fa3f8;
+//     background: white;
+//   }
+//   &.is-correct {
+//     input {
+//       border-color: #10b981 !important; // Emerald
+//       background-color: #f0fdf4 !important;
+//       color: #065f46 !important;
+//       box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1) !important;
+//     }
+
+//     /* Small success checkmark inside the input */
+//     &:after {
+//       content: "✓";
+//       position: absolute;
+//       top: -10px;
+//       right: -10px;
+//       width: 28px;
+//       height: 28px;
+//       background: #10b981;
+//       color: white;
+//       border-radius: 50%;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       font-size: 1rem;
+//       box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+//     }
+//   }
+
+//   /* --- ERROR STATE --- */
+//   &.is-wrong {
+//     input {
+//       border-color: #f43f5e !important; // Rose
+//       background-color: #fff1f2 !important;
+//       color: #9f1239 !important;
+//       /* Shake animation */
+//       animation: snapShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+//     }
+
+//     /* Small error cross inside the input */
+//     &::after {
+//       content: "✕";
+//       position: absolute;
+//       right: 20px;
+//       top: 50%;
+//       transform: translateY(-50%);
+//       color: #f43f5e;
+//       font-size: 1.2rem;
+//       font-weight: 800;
+//     }
+//   }
+// }
+
+// .worksheet-answer-field {
+//   border-radius: 16px;
+//   position: relative;
+//   background: #f0f0f0;
+//   padding: 15px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   gap: 15px;
+//   border: 4px solid #000;
+//   max-width: 440px;
+//   margin: 1.5rem auto;
+
+//   // 3D Perspective Logic
+//   transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
+//   transform-style: preserve-3d;
+//   // transform: rotateX(10deg) rotateY(-10deg);
+//   perspective: 1000px;
+//   box-shadow: 10px 10px 0 #000;
+
+//   // The Top-Left Badge (Label)
+//   &::before {
+//     content: "YOUR ANSWER";
+//     position: absolute;
+//     top: -20px;
+//     left: 10px;
+//     background: #e9b50b;
+//     color: #000;
+//     font-weight: 900;
+//     padding: 5px 15px;
+//     font-size: 14px;
+//     transform: translateZ(50px);
+//     z-index: 4;
+//     border: 3px solid #000;
+//     letter-spacing: 1px;
+//   }
+
+//   input {
+//     width: 100%;
+//     outline: none;
+//     border: 3px solid #000;
+//     padding: 20px;
+//     font-size: 2.5rem;
+//     font-weight: 900;
+//     background: #fff;
+//     color: #000;
+//     transform: translateZ(10px);
+//     transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
+//     position: relative;
+//     z-index: 3;
+//     text-align: center;
+
+//     &::placeholder {
+//       color: #aaa;
+//       font-size: 1.2rem;
+//       text-transform: uppercase;
+//     }
+
+//     &:focus {
+//       background: #fff;
+//       transform: translateZ(30px) translateX(-5px) translateY(-5px);
+//       box-shadow: 8px 8px 0 0 #000;
+//     }
+//   }
+
+//   // Hover effect for the whole container
+//   &:hover {
+//     transform: rotateX(5deg) rotateY(-1deg) scale(1.02);
+//     box-shadow:
+//       20px 20px 0 -5px #e9b50b,
+//       20px 20px 0 0 #000;
+//   }
+
+//   // --- SUCCESS STATE ---
+//   &.is-correct {
+//     border-color: #000;
+//     background: #10b981; // Emerald Green background for container
+
+//     &::before {
+//       content: "Correct";
+//       background: #fff;
+//     }
+
+//     input {
+//       border-color: #000;
+//       background: #f0fdf4;
+//       color: #064e3b;
+//       pointer-events: none;
+//     }
+//   }
+
+//   // --- ERROR STATE ---
+//   &.is-wrong {
+//     animation: brutalShake 0.4s step-end infinite;
+
+//     &::before {
+//       content: "TRY AGAIN";
+//       background: #f43f5e;
+//       color: #fff;
+//     }
+
+//     input {
+//       background: #fff1f2;
+//       color: #9f1239;
+//     }
+//   }
+// }
+// .shadow__input {
+//   content: "";
+//   position: absolute;
+//   width: 100%;
+//   height: 100%;
+//   left: 0;
+//   bottom: 0;
+//   z-index: -1;
+//   transform: translateZ(-50px);
+//   background: linear-gradient(
+//     45deg,
+//     rgba(233, 181, 11, 0.4) 0%,
+//     rgba(233, 181, 11, 0.1) 100%
+//   );
+//   filter: blur(20px);
+// }
+
+.worksheet-answer-field {
+  border-radius: 16px;
+  position: relative;
+  background: #f0f0f0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  border: 4px solid #3d405b;
+  max-width: 400px;
+  margin: 1.5rem auto;
+  cursor: pointer;
+
+  // 3D Perspective Logic
+  transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  box-shadow: 10px 10px 0 #3d405b;
+
+  // The Top-Left Label (From New Code)
+  &::before {
+    content: "YOUR ANSWER";
+    position: absolute;
+    top: -25px;
+    left: 10px;
+    background: #f2cc8f;
+    color: #3d405b;
+    font-weight: 900;
+    padding: 5px 15px;
+    font-size: 14px;
+    transform: translateZ(50px);
+    z-index: 4;
+    border: 3px solid #3d405b;
+    letter-spacing: 1px;
+    transition: all 400ms ease;
+    @include ut.breakpoint(medium) {
+      font-size: 12px;
+    }
+    @include ut.breakpoint(small) {
+      // font-size: 1.4rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      // font-size: 1.2rem;
+    }
+  }
+
+  input {
+    width: 100%;
+    outline: none;
+    border: 3px solid #3d405b;
+    padding: 12px;
+    font-size: 1.7rem;
+    font-weight: 900;
+    background: #fff;
+    color: #3d405b;
+    transform: translateZ(10px);
+    transition: all 400ms cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    border-radius: 12px;
+    @include ut.breakpoint(large) {
+      font-size: 1.6rem;
+      padding: 10px;
+    }
+    @include ut.breakpoint(medium) {
+      font-size: 1.5rem;
+      padding: 8px;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 1.4rem;
+      padding: 8px;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 1.2rem;
+    }
+
+    &::placeholder {
+      color: #aaa;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+    }
+
+    &:focus {
+      background: #fff;
+      transform: translateZ(30px) translateX(-5px) translateY(-5px);
+      box-shadow: 8px 8px 0 0 #3d405b;
+    }
+  }
+
+  &:hover {
+    transform: rotateX(5deg) rotateY(-1deg) scale(1.02);
+    box-shadow:
+      20px 20px 0 -5px #f2cc8f,
+      20px 20px 0 0 #3d405b;
+  }
+
+  // --- SUCCESS STATE (Merged) ---
+  &.is-correct {
+    border-color: #3d405b;
+    background: #10b981; // Emerald Green from old code
+
+    &::before {
+      content: "Correct";
+      background: #fff;
+    }
+
+    // Success Checkmark Badge (From Old Code)
+    &::after {
+      content: "✓";
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      width: 35px;
+      height: 35px;
+      background: #10b981;
+      color: white;
+      border: 3px solid #3d405b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 900;
+      box-shadow: 5px 5px 0 #3d405b;
+      z-index: 5;
+      transform: translateZ(60px);
+    }
+
+    input {
+      border-color: #3d405b;
+      background-color: #f0fdf4 !important; // Light emerald
+      color: #065f46 !important;
+      pointer-events: none;
+      box-shadow: 5px 5px 0 #3d405b;
+    }
+  }
+
+  // --- ERROR STATE ---
+  &.is-wrong {
+    background: #fecaca;
+
+    &::before {
+      content: "Wrong";
+      background: #f43f5e;
+      color: #fff;
+    }
+
+    &::after {
+      content: "✕";
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      width: 35px;
+      height: 35px;
+      background: #f43f5e;
+      color: white;
+      border: 3px solid #3d405b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 900;
+      box-shadow: 5px 5px 0 #3d405b;
+      z-index: 5;
+      transform: translateZ(60px);
+    }
+
+    input {
+      border-color: #3d405b;
+      background-color: #fff1f2 !important;
+      color: #9f1239 !important;
+      box-shadow: 5px 5px 0 #3d405b;
+    }
+  }
+}
+
+.worksheet-answer-field--guided {
+  width: min(100%, 420px);
+  margin: 0.4rem auto 0;
+
+  span {
+    color: $worksheet-text;
+  }
+
+  input {
+    min-height: 62px;
+    width: min(100%, 420px);
+
+    border: 2px solid rgba(60, 132, 206, 0.28);
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.98),
+      0 14px 26px rgba(61, 64, 91, 0.06);
+
+    &::placeholder {
+      color: #7b91a8;
+    }
+
+    &:focus {
+      border-color: rgba(60, 132, 206, 0.82);
+      box-shadow:
+        0 0 0 4px rgba(60, 132, 206, 0.12),
+        0 14px 26px rgba(61, 64, 91, 0.06);
+    }
+  }
+}
+
+.worksheet-feedback {
+  margin: auto;
+  width: min(100%, 525px);
+  padding: 0.95rem 0rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: $worksheet-text;
+}
+
+.worksheet-feedback.is-success {
+  background: linear-gradient(180deg, #f4faef 0%, #e9f6ec 100%);
+  color: #44735f;
+  border: 1px solid rgba(129, 178, 154, 0.4);
+
+  /* Locks it in as fully visible */
+  opacity: 1;
+  transform: translateY(0);
+
+  animation: flipInSuccess 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.worksheet-feedback.is-error {
+  background: linear-gradient(180deg, #fff2ef 0%, #fde6e1 100%);
+  color: #b65a4f;
+  border: 1px solid rgba(199, 104, 79, 0.3);
+
+  /* Locks it in as fully visible */
+  opacity: 1;
+
+  animation: swingDownError 2s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes flipInSuccess {
+  0% {
+    opacity: 0;
+    transform: perspective(400px) rotateX(90deg) scale(0.9);
+  }
+  40% {
+    opacity: 1;
+    transform: perspective(400px) rotateX(-10deg) scale(1.02);
+  }
+  70% {
+    transform: perspective(400px) rotateX(5deg) scale(1);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+}
+
+/* Swings down from the top like a trapdoor */
+@keyframes swingDownError {
+  0% {
+    opacity: 0;
+    transform: perspective(400px) rotateX(-90deg);
+  }
+  40% {
+    opacity: 1;
+    transform: perspective(400px) rotateX(15deg);
+  }
+  70% {
+    transform: perspective(400px) rotateX(-5deg);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg);
+  }
+}
+
+.worksheet-verification {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    color: $worksheet-text-soft;
+  }
+}
+
+.worksheet-verification__equation {
+  padding: 1rem 1.1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.worksheet-actions {
+  min-width: 200px;
+  margin: 0 auto;
+  // padding: 0.7rem;
+  @include ut.breakpoint(larger) {
+  }
+  @include ut.breakpoint(large) {
+    width: 200px;
+  }
+  @include ut.breakpoint(medium) {
+    width: fit-content;
+  }
+  @include ut.breakpoint(small) {
+    // font-size: 0.9rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    // font-size: 0.7rem;
+  }
+}
+
+// .worksheet-button {
+//   width: 100%;
+//   min-height: 64px; // Slightly taller for a better click target
+//   border-radius: 16px;
+//   font-size: 1.3rem;
+//   font-weight: 900;
+//   letter-spacing: 0.05em;
+//   text-transform: uppercase;
+//   cursor: pointer;
+//   transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+//   font-family: inherit; // Keeps your cursive font
+//   position: relative;
+//   z-index: 10;
+// }
+
+// /* --- THE MAIN SUBMIT BUTTON --- */
+// .worksheet-button--primary {
+//   // Bold, magical colors
+//   background: #3d405b;
+//   color: #fff;
+//   border: 3px solid #3d405b;
+
+//   // The chunky 3D shadow using your Wizard Gold
+//   box-shadow:
+//     0 6px 0 #e9b50b,
+//     0 10px 20px rgba(61, 64, 91, 0.2);
+//   // transition: all 0.5s;
+
+//   &:hover:enabled {
+//     background: #4a4e6d; // Slightly lighter on hover
+//     color: #fff;
+//     transform: translateY(-2px);
+//     box-shadow:
+//       0 8px 0 #e9b50b,
+//       0 15px 25px rgba(61, 64, 91, 0.3);
+//   }
+//   // The satisfying tactile PRESS effect
+//   &:active:enabled {
+//     transform: translateY(6px); // Pushes the button down
+//     box-shadow: 0 0 0 #e9b50b; // Flattens the 3D shadow
+//   }
+
+//   // Clean, obvious disabled state
+//   &:disabled {
+//     background: #f1f5f9;
+//     color: #94a3b8;
+//     border: 3px solid #cbd5e1;
+//     box-shadow: 0 6px 0 #cbd5e1;
+//     cursor: not-allowed;
+//     transform: translateY(0);
+//   }
+// }
+
+// /* --- THE STATUS / LOADING BUTTON --- */
+// .worksheet-button--status {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 0 1.5rem;
+//   background: #f8fafc;
+//   color: #64748b;
+//   border: 3px dashed #cbd5e1;
+//   box-shadow: none;
+//   font-size: 1.2rem;
+//   font-style: italic;
+//   text-align: center;
+//   line-height: 1.3;
+
+//   // Gentle pulsing animation
+//   animation: pulseStatus 2s infinite ease-in-out;
+// }
+
+// @keyframes pulseStatus {
+//   0%,
+//   100% {
+//     opacity: 0.8;
+//     transform: scale(0.99);
+//   }
+//   50% {
+//     opacity: 1;
+//     transform: scale(1);
+//     border-color: #94a3b8;
+//     color: #475569;
+//   }
+// }
+
+/* --- BASE BUBBLE SHAPE --- */
+.worksheet-button {
+  width: 100%;
+  min-height: 64px;
+  border-radius: 99px;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: inherit;
+  position: relative;
+  z-index: 10;
+  border: 4px solid #1e293b;
+  // @include ut.breakpoint(larger) {
+  //   min-height: 64px;
+  // }
+  @include ut.breakpoint(large) {
+    min-height: 54px;
+    font-size: 1.1rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 1rem;
+    // font-size: 1rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.9rem;
+    // font-size: 1rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.8rem;
+    // font-size: 1rem;
+  }
+}
+.worksheet-button--primary {
+  background: #f2cc8f;
+  color: #3d405b;
+  box-shadow:
+    0 8px 0 #3d405b,
+    inset 0 -5px 0 rgba(0, 0, 0, 0.15),
+    inset 0 4px 0 rgba(255, 255, 255, 0.7);
+  @include ut.breakpoint(medium) {
+    padding: 1rem 1.75rem;
+  }
+  @include ut.breakpoint(small) {
+    padding: 0.7rem 1.3rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    padding: 0.5rem 1rem;
+  }
+  &:hover:enabled {
+    // background: #e9a840;
+    background: #fcd34d;
+    transform: translateY(2px);
+    box-shadow:
+      0 6px 0 #1e293b,
+      inset 0 -5px 0 rgba(0, 0, 0, 0.1),
+      inset 0 4px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  &:active:enabled {
+    transform: translateY(8px);
+    box-shadow:
+      0 0 0 #1e293b,
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1),
+      inset 0 2px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  &:disabled {
+    background: #e2e8f0;
+    color: #94a3b8;
+    border-color: #94a3b8;
+    box-shadow:
+      0 8px 0 #94a3b8,
+      inset 0 -4px 0 rgba(0, 0, 0, 0.05);
+    cursor: not-allowed;
+    transform: translateY(0);
+    z-index: -10;
+  }
+}
+
+.worksheet-button--reveal {
+  /* 1. Structural base for the shine effect */
+  position: relative;
+  overflow: hidden;
+
+  background: #f2cc8f;
+  color: #3d405b;
+
+  /* 2. The Secret Sauce: Smooth transitions for the 3D press */
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  box-shadow:
+    0 8px 0 #3d405b,
+    inset 0 -5px 0 rgba(0, 0, 0, 0.15),
+    inset 0 4px 0 rgba(255, 255, 255, 0.7);
+
+  /* 3. Idle Animation: A subtle, friendly bounce to draw the eye */
+  animation: gentle-float 3s infinite ease-in-out;
+
+  /* --- HOVER STATE --- */
+  /* Using :not(:disabled) is slightly safer than :enabled in React */
+  &:hover:not(:disabled) {
+    background: #fcd34d;
+    // color: white;
+    // background: #81b29a;
+    transform: translateY(2px);
+
+    /* Kept the shadow color #3d405b consistent so it doesn't flash grayish-blue */
+    box-shadow:
+      0 6px 0 #3d405b,
+      inset 0 -5px 0 rgba(0, 0, 0, 0.1),
+      inset 0 4px 0 rgba(255, 255, 255, 0.9);
+
+    /* Pause the float animation when the user interacts with it */
+    animation-play-state: paused;
+  }
+
+  /* 4. Premium Shine Swipe on Hover */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.5),
+      transparent
+    );
+    transform: skewX(-20deg);
+  }
+
+  &:hover:not(:disabled)::after {
+    animation: shine-swipe 0.6s ease-out;
+  }
+
+  /* --- ACTIVE (CLICK) STATE --- */
+  &:active:not(:disabled) {
+    transform: translateY(8px); /* Fully pressed down */
+    box-shadow:
+      0 0 0 #3d405b,
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1),
+      inset 0 2px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  /* --- DISABLED STATE --- */
+  &:disabled {
+    background: #e2e8f0;
+    color: #94a3b8;
+    border-color: #94a3b8;
+    box-shadow:
+      0 8px 0 #cbd5e1,
+      /* Lightened the shadow so it looks truly inactive */ inset 0 -4px 0
+        rgba(0, 0, 0, 0.05);
+    cursor: not-allowed;
+    transform: translateY(0);
+
+    /* Ensure disabled buttons never animate */
+    animation: none;
+  }
+}
+
+@keyframes gentle-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  } /* Gently lifts up and down */
+}
+
+@keyframes shine-swipe {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+/* --- STATUS: CARTOON STRIPE --- */
+.worksheet-button--status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  color: #1e293b;
+  font-size: 1rem;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.3;
+  background: repeating-linear-gradient(
+    -45deg,
+    #fff,
+    #fff 15px,
+    #f1f5f9 15px,
+    #f1f5f9 30px
+  );
+  background-size: 42px 42px;
+  animation: toonStripe 1s linear infinite;
+  @include ut.breakpoint(medium) {
+    font-size: 0.7rem;
+  }
+}
+
+@keyframes toonStripe {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 42px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .worksheet {
+    padding: 1rem 0.95rem 1.35rem;
+  }
+
+  .worksheet__topline {
+    align-items: stretch;
+  }
+
+  .equation-board {
+    gap: 0.58rem;
+  }
+
+  .equation-box {
+    min-width: 74px;
+    min-height: 96px;
+    border-radius: 18px;
+
+    // strong {
+    //   font-size: 1.8rem;
+    // }
+  }
+
+  .worksheet-keypad,
+  .worksheet-target-hint {
+    width: 100%;
+  }
+
+  // .worksheet-title {
+  //   margin-left: auto;
+  // }
+}
+
+@keyframes breathingPulse {
+  0% {
+    transform: scale(1) translateY(0);
+    box-shadow:
+      0 0 0 0 rgba(199, 104, 79, 0.5),
+      0 10px 24px rgba(61, 64, 91, 0.06);
+  }
+  50% {
+    transform: scale(1.06) translateY(-2px);
+    box-shadow:
+      0 0 0 12px rgba(199, 104, 79, 0),
+      0 18px 32px rgba(61, 64, 91, 0.12);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    box-shadow:
+      0 0 0 0 rgba(199, 104, 79, 0),
+      0 10px 24px rgba(61, 64, 91, 0.06);
+  }
+}
+
+// Selection Pointing
+.equation-box,
+.bar-box,
+.compare-gap__unknown-card {
+  position: relative;
+}
+
+/* 2. Attach the CSS Triangle ONLY to the active, empty box */
+.equation-box.is-active:has(.hide-on-focus)::after,
+.bar-box.is-active:has(.hide-on-focus)::after,
+.compare-gap__left.is-active:has(.hide-on-focus)
+  .compare-gap__unknown-card::after {
+  content: "";
+  position: absolute;
+  bottom: -26px;
+  left: 50%;
+  margin-left: -9px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 14px solid #c7684f;
+  filter: drop-shadow(0 4px 6px rgba(199, 104, 79, 0.35));
+  animation: pointUpBounce 1s infinite ease-in-out;
+  z-index: 50;
+  pointer-events: none;
+}
+
+@keyframes pointUpBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.worksheet-target-hint {
+  width: min(100%, 320px);
+  margin: 1.5rem auto 0;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  border-radius: 999px;
+  border: 1px solid rgba(60, 132, 206, 0.25);
+  background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
+  color: #426486;
+  font-size: 0.95rem;
+  font-weight: 700;
+  position: relative;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    0 8px 16px rgba(61, 64, 91, 0.04);
+
+  strong {
+    color: #24588e;
+  }
+}
+/* --- Utility Bar Layout --- */
+.worksheet-utility-bar {
+  display: flex;
+  // height: 55px;
+  height: 45px;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0 0.5rem;
+  @include ut.breakpoint(medium) {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    gap: 0.6rem;
+  }
+  &__left {
+    gap: 0.1rem;
+    height: inherit;
+    display: flex;
+    margin-right: auto;
+    width: 37%;
+    width: fit-content;
+    @include ut.breakpoint(xLarge) {
+      font-size: 0.8rem;
+    }
+    @include ut.breakpoint(large) {
+      font-size: 0.64rem;
+    }
+    @include ut.breakpoint(medium) {
+      font-size: 0.74rem;
+      margin-right: 0;
+      width: -webkit-fill-available;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.7rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.6rem;
+    }
+  }
+  &__right {
+    width: 65%;
+    text-align: end;
+    height: inherit;
+    @include ut.breakpoint(large) {
+      width: 62%;
+    }
+    @include ut.breakpoint(medium) {
+      width: fit-content;
+    }
+  }
+}
+
+/* 1. Base Button Styles */
+.worksheet-help {
+  // margin-right: 0.5rem;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  // font-size: 0.96rem;
+  font-weight: 800;
+  color: #ffd166;
+  background: linear-gradient(180deg, #3d405b 0%, #1f2235 100%);
+  // background: linear-gradient(180deg, #2a2d3e 0%, #1a1c29 100%);
+  border-radius: 99px;
+  box-shadow: 3px 3px 0 #e9b50b;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease,
+    padding 0.3s ease,
+    border-radius 0.3s ease;
+  height: inherit;
+  // max-width: 150px;
+  // max-width: fit-content;
+  // max-width: 90%;
+  white-space: nowrap;
+  // margin: auto;
+
+  @include ut.breakpoint(large) {
+    // font-size: 0.6rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 1rem;
+    padding: 0.3rem 0.8rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    padding: 0.3rem;
+    font-size: 0.8rem;
+  }
+  @include ut.breakpoint(xSmall) {
+  }
+}
+
+.sparkle__main {
+  @include ut.breakpoint(large) {
+    font-size: 0.8rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 0.8rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.7rem;
+  }
+  // @include ut.breakpoint(xSmall) {
+  //   font-size: 0.45rem;
+  // }
+}
+.worksheet-help .sparkle {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 1.15rem;
+  opacity: 0.9;
+}
+
+.worksheet-help:not(.is-open):not(:hover) .sparkle {
+  animation: twinkleSparkle 2s ease-in-out infinite;
+}
+
+.worksheet-help:not(.is-open):hover .sparkle {
+  animation: spinSparkle 0.6s ease-in-out forwards;
+}
+
+.worksheet-help:not(.is-open):hover {
+  // background: linear-gradient(180deg, #3d405b 0%, #1f2235be 100%);
+  background: linear-gradient(180deg, #3d405b 0%, #1f2235 100%);
+
+  color: white;
+  transform: translateY(-4px) scale(1.06) !important;
+  animation-play-state: paused;
+}
+
+.worksheet-help:active {
+  transform: translateY(2px) scale(0.96);
+  filter: brightness(0.9);
+}
+
+.worksheet-help.is-open {
+  color: #ffd166;
+  border-color: rgba(255, 209, 102, 0.6);
+  background: linear-gradient(180deg, #2a2d3e 0%, #1a1c29 100%);
+  // max-width: 600px;
+  white-space: normal;
+  // height: auto;
+  line-height: 1.4;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    padding 0.3s ease,
+    border-radius 0.3s ease;
+
+  animation: hintPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  box-shadow:
+    0 0 0 4px rgba(255, 209, 102, 0.15),
+    0 8px 16px rgba(0, 0, 0, 0.2);
+  @include ut.breakpoint(medium) {
+    padding: 0.6rem;
+  }
+}
+
+.worksheet-help.is-open:hover {
+  background: linear-gradient(180deg, #3d405b 0%, #1f2235be 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    0 4px 12px rgba(61, 64, 91, 0.05);
+}
+
+.worksheet-help.is-open .sparkle {
+  opacity: 0.85;
+  animation: none;
+  transform: none;
+}
+
+.hint-text-reveal {
+  display: inline-block;
+  animation: magicTextReveal 0.6s ease-out forwards;
+  animation-delay: 0.05s;
+  opacity: 0;
+
+  @include ut.breakpoint(large) {
+    font-size: 0.8rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 0.7rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.65rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.6rem;
+  }
+}
+
+// KEYFRAMES
+@keyframes magicTextReveal {
+  0% {
+    opacity: 0;
+    transform: translateX(-15px);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+@keyframes twinkleSparkle {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(0.9) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(8deg);
+    filter: drop-shadow(0 0 4px rgba(242, 204, 143, 0.8));
+  }
+}
+
+@keyframes spinSparkle {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(18deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes hintPop {
+  0% {
+    transform: scale(0.95);
+  }
+  40% {
+    transform: scale(1.02);
+  }
+  70% {
+    transform: scale(0.99);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* =========================================
+   1. MOD 1 (CHANGE): THE HOLLOW SUBTRACTION SLOT
+   ========================================= */
+.bar-model.is-pill-model .bar-box.is-subtraction {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.6) 8px,
+    rgba(148, 163, 184, 0.35) 8px,
+    rgba(148, 163, 184, 0.35) 10px
+  ) !important;
+  border: 3px dashed #cbd5e1 !important;
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+  color: #64748b !important;
+}
+
+/* Turns the hollow pill red when clicked */
+.bar-model.is-pill-model .bar-box.is-subtraction.is-active {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.6) 8px,
+    rgba(248, 113, 113, 0.25) 8px,
+    rgba(248, 113, 113, 0.25) 10px
+  ) !important;
+  border-color: #f87171 !important;
+  color: #ef4444 !important;
+}
+
+/* =========================================
+   1. MOD 1 (CHANGE):
+   ========================================= */
+.bar-model.is-pill-model .bar-box.is-subtraction {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.6) 8px,
+    rgba(148, 163, 184, 0.35) 8px,
+    rgba(148, 163, 184, 0.35) 10px
+  ) !important;
+  border: 3px dashed #cbd5e1 !important;
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+  color: #64748b !important;
+}
+
+/* Turns the hollow pill red when clicked */
+.bar-model.is-pill-model .bar-box.is-subtraction.is-active {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.6) 8px,
+    rgba(248, 113, 113, 0.25) 8px,
+    rgba(248, 113, 113, 0.25) 10px
+  ) !important;
+  border-color: #f87171 !important;
+  color: #ef4444 !important;
+}
+
+/* =========================================
+   2. UNIVERSAL HASHED UNKNOWN BOXES
+   ========================================= */
+.bar-model .bar-box.is-missing-value {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(148, 163, 184, 0.15) 8px,
+    rgba(148, 163, 184, 0.15) 10px
+  ) !important;
+  border-color: #cbd5e1 !important;
+  border-style: dashed !important;
+  border-width: 2px !important;
+  color: #ef4444 !important;
+  box-shadow: none !important;
+}
+
+.bar-model .bar-box.is-missing-value.is-active {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(199, 104, 79, 0.1) 8px,
+    rgba(199, 104, 79, 0.1) 10px
+  ) !important;
+  border-color: #f87171 !important;
+  box-shadow: none !important;
+}
+
+.bar-model.is-pill-model .bar-box.is-missing-value {
+  border-width: 3px !important;
+}
+@keyframes bar-success-bounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.06) translateY(-10px);
+  }
+  70% {
+    transform: scale(0.98) translateY(2px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes bar-error-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+.bar-box {
+  position: relative;
+  transition: all 0.3s ease;
+
+  &.is-correct {
+    animation: bar-success-bounce 0.6s ease-out forwards !important;
+    border: 3px solid #4ade80 !important;
+    background-color: #f0fdf4 !important;
+    box-shadow: 0 0 25px rgba(74, 222, 128, 0.4) !important;
+    z-index: 10;
+
+    strong {
+      color: #15803d !important;
+    }
+
+    &::after {
+      content: "✨";
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      font-size: 1.6rem;
+      animation: bar-success-bounce 1s infinite alternate;
+    }
+  }
+
+  &.is-wrong {
+    animation: bar-error-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important;
+    border: 3px solid #f87171 !important;
+    background-color: #fef2f2 !important;
+
+    strong {
+      color: #b91c1c !important;
+    }
+  }
+}
+@keyframes bar-success-bounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.06) translateY(-10px);
+  }
+  70% {
+    transform: scale(0.98) translateY(2px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes bar-error-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+/* =========================================
+   BAR MODEL FEEDBACK STATES
+   ========================================= */
+
+.bar-box {
+  position: relative;
+  transition: all 0.3s ease;
+  font-family: "ActualComicSans", cursive;
+  color: #3d405b !important;
+  &.is-correct {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e5e5 !important;
+    border-bottom: 4px solid #22c55e !important;
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.25) !important;
+    transform: translateY(-2px) !important;
+
+    strong {
+      color: #16a34a !important;
+    }
+    span {
+      color: #16a34a !important;
+    }
+
+    &::after {
+      content: "✓";
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #22c55e;
+      text-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+  }
+
+  &.is-wrong {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e5e5 !important;
+    border-bottom: 4px solid #ef4444 !important;
+
+    /* The FULL Glow: 0 offsets so it surrounds the whole box */
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.25) !important;
+    animation: minimalShake 0.3s ease-in-out both !important;
+
+    strong {
+      color: #dc2626 !important;
+    }
+    span {
+      color: #dc2626 !important;
+    }
+
+    &::after {
+      content: "!";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background-color: #ffe4e6;
+      border-radius: 50%;
+
+      color: #be123c;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+  }
+}
+
+@keyframes minimalShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+@keyframes brutalShake {
+  0%,
+  100% {
+    transform: rotateX(5deg) rotateY(-1deg) scale(1.02) translateX(0);
+  }
+  20% {
+    transform: rotateX(5deg) rotateY(-1deg) scale(1.02) translateX(-10px);
+  }
+  40% {
+    transform: rotateX(5deg) rotateY(-1deg) scale(1.02) translateX(10px);
+  }
+  60% {
+    transform: rotateX(5deg) rotateY(-1deg) scale(1.02) translateX(-10px);
+  }
+  80% {
+    transform: rotateX(5deg) rotateY(-1deg) scale(1.02) translateX(10px);
+  }
+}
+@keyframes rowShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+/* ======================================================== */
+/* UIVERSE ANIMATED CONTINUE BUTTON (Perfect Size Fix)      */
+/* ======================================================== */
+
+.worksheet-button--continue {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* 🔥 FIX 1: Override inherited width so it becomes a sleek pill shape */
+  width: max-content !important;
+  min-width: 280px; /* Gives it a nice baseline width */
+  margin: 0 auto; /* Centers the button in the action bar */
+
+  /* 🔥 FIX 2: Balanced padding. 48px leaves exact room for the 28px arrow */
+  padding: 0 48px;
+
+  /* Game 3D Styles */
+  background: linear-gradient(180deg, #fcd34d 0%, #f2cc8f 100%);
+  color: #3d405b;
+  border-color: #3d405b;
+  border-radius: 99px;
+  box-shadow:
+    0 8px 0 #3d405b,
+    inset 0 -5px 0 rgba(0, 0, 0, 0.15),
+    inset 0 4px 0 rgba(255, 255, 255, 0.7);
+
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 10;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* SVG Arrow Setup */
+  svg {
+    position: absolute !important;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px; /* Slightly scaled down to fit perfectly */
+    fill: #3d405b;
+    z-index: 9;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .arr-1 {
+    right: 20px; /* Sits cleanly inside the right padding */
+  }
+
+  .arr-2 {
+    left: -40px; /* Hidden off the left edge */
+  }
+
+  .circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0px;
+    height: 0px;
+    background-color: #3d405b;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 0;
+  }
+
+  .text {
+    position: relative;
+    z-index: 1;
+    /* Shifts text slightly left to visually balance the arrow on the right */
+    transform: translateX(-6px);
+    white-space: nowrap;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  &:hover {
+    color: #f2cc8f;
+    border-radius: 99px;
+    // border: 4px solid #f2cc8f;
+
+    transform: translateY(4px) !important;
+    // box-shadow:
+    //   0 4px 0 #f2cc8f,
+    //   inset 0 -3px 0 rgba(0, 0, 0, 0.15),
+    //   inset 0 4px 0 rgba(255, 255, 255, 0.2) !important;
+
+    .arr-1 {
+      right: -40px; /* Fly off right */
+    }
+
+    .arr-2 {
+      left: 20px; /* Fly in from left */
+    }
+
+    .text {
+      /* Shifts text right to balance the new arrow on the left */
+      transform: translateX(10px);
+    }
+
+    svg {
+      fill: #f2cc8f;
+    }
+
+    .circle {
+      width: 600px;
+      height: 600px;
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    scale: 0.98;
+    transform: translateY(8px) !important;
+    box-shadow:
+      0 0px 0 #3d405b,
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+      inset 0 2px 0 rgba(255, 255, 255, 0.2) !important;
+  }
+}
+
+.worksheet-button--continue:disabled {
+  /* Kept your existing color palette */
+  background: #e2e8f0 !important;
+  color: #94a3b8 !important;
+  border: 2px solid #cbd5e1 !important; /* Softened the border slightly so it looks inactive */
+
+  /* 1. FIX THE PHYSICS: Flatten the shadow so it looks 'dead' and unclickable */
+  box-shadow:
+    0 2px 0 #cbd5e1,
+    inset 0 -2px 0 rgba(255, 255, 255, 0.5) !important;
+
+  cursor: not-allowed;
+
+  /* 2. Push it down to account for the lost 3D shadow height */
+  transform: translateY(6px) !important;
+  border-radius: 99px;
+
+  svg,
+  .circle {
+    display: none !important;
+  }
+
+  .text {
+    transform: translateX(0) !important;
+  }
+
+  /* 3. BULLETPROOF HOVER: Lock down every property so global styles can't bleed through! */
+  &:hover,
+  &:active,
+  &:focus {
+    background: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    border-color: #cbd5e1 !important;
+    box-shadow:
+      0 2px 0 #cbd5e1,
+      inset 0 -2px 0 rgba(255, 255, 255, 0.5) !important;
+    transform: translateY(6px) !important;
+    outline: none !important;
+  }
+}
+
+/* -------- NEW KEYFRAMES -------- */
+@keyframes continueBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes continueGlowPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 0 #3d405b,
+      inset 0 -5px 0 rgba(0, 0, 0, 0.15),
+      inset 0 4px 0 rgba(255, 255, 255, 0.7),
+      0 0 12px rgba(242, 204, 143, 0.5);
+  }
+  50% {
+    box-shadow:
+      0 10px 0 #3d405b,
+      inset 0 -5px 0 rgba(0, 0, 0, 0.15),
+      inset 0 4px 0 rgba(255, 255, 255, 0.7),
+      0 0 24px rgba(242, 204, 143, 0.85);
+    transform: scale(1.03);
+  }
+}
+
+@keyframes continueShimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+/* --- ANIMATIONS --- */
+
+@keyframes buttonBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.04); // Subtle growth
+    filter: brightness(1.1); // Slight magic glow
+    /* Deepen the 3D shadow as it lifts off the page */
+    box-shadow:
+      0 10px 0 #3d405b,
+      inset 0 -5px 0 rgba(0, 0, 0, 0.15),
+      inset 0 4px 0 rgba(255, 255, 255, 0.7);
+  }
+}
+
+@keyframes buttonPopIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* The shiny glare that sweeps across the button */
+@keyframes glassShine {
+  0% {
+    transform: translateX(-200%) skewX(-25deg);
+  }
+  15% {
+    transform: translateX(250%) skewX(-25deg);
+  }
+  100% {
+    transform: translateX(250%) skewX(-25deg);
+  }
+}
+
+/* -------------------- KEYPAD EXIT ANIMATION --------------------- */
+// @keyframes keypadUnfold {
+//   0% {
+//     max-height: 0;
+//     opacity: 0;
+//     transform: translateY(-20px) scale(0.95);
+//   }
+//   100% {
+//     max-height: 400px; /* Adjust if your keypad is taller */
+//     opacity: 1;
+//     transform: translateY(0) scale(1);
+//   }
+// }
+@keyframes keypadUnfold {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+/* --- 2. THE CLOSING ANIMATION --- */
+@keyframes keypadCollapse {
+  0% {
+    max-height: 400px;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    margin: 0; /* Sucks up the extra space */
+  }
+}
+
+// .keypad-animator {
+//   transform-origin: top center;
+//   overflow: hidden;
+//   will-change: max-height, opacity, transform;
+
+//   /* Hidden by default – no animation */
+//   max-height: 0;
+//   opacity: 0;
+
+//   &.animate-unfold {
+//     animation: keypadUnfold 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+//   }
+
+//   &.is-hidden {
+//     animation: keypadCollapse 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+//     pointer-events: none;
+//   }
+// }
+.keypad-animator {
+  transform-origin: top center;
+  overflow: hidden;
+  will-change: transform, opacity;
+
+  /* Hidden but retains full layout height */
+  transform: scaleY(0);
+  opacity: 0;
+
+  &.animate-unfold {
+    animation: keypadUnfold 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  &.is-hidden {
+    animation: keypadCollapse 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    pointer-events: none;
+  }
+}
+.keypad-animator.animate-unfold {
+  animation: keypadUnfold 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Collapse (hidden) stays the same */
+.keypad-animator.is-hidden {
+  animation: keypadCollapse 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+/* Add this to your SASS file */
+.bar-box strong {
+  transition: all 0.4s ease-out;
+}
+
+/* This class is automatically applied when value changes */
+.is-correct strong,
+.is-revealed strong {
+  animation: pulse-reveal 0.6s ease-out;
+}
+
+@keyframes pulse-reveal {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Animation for revealed number */
+.is-correct strong {
+  animation: pulse-reveal 0.6s ease-out forwards;
+}
+
+@keyframes pulse-reveal {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* 1. Option A: Give the whole equation area a soft background */
+/* 1. Option A: Give the whole equation area a soft background with Reveal Animation */
+.is-revealed-board {
+  background-color: #f8f9fa; /* A soft, neutral gray */
+  border-radius: 16px;
+  padding: 12px;
+  border: 2px dashed #dee2e6;
+
+  /* Required to keep the shine effect inside the border */
+  position: relative;
+  overflow: hidden;
+
+  /* The materializing "thin air" animation */
+  animation: manifestFromAir 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+  /* The quick magical shine across the board as it appears */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-25deg);
+    animation: revealShine 1s ease-out 0.2s forwards; /* Delays slightly so it shines right as it solidifies */
+    pointer-events: none;
+  }
+}
+
+/* Option A: Make the revealed answer boxes pop with a yellow highlight */
+.is-revealed-board input,
+.is-revealed-board .equation-slot {
+  background-color: #fff3cd !important;
+  border-color: #ffe69c !important;
+  color: #664d03 !important;
+  transition: all 0.3s ease; /* Smooth transition if they change state */
+}
+@keyframes manifestFromAir {
+  0% {
+    opacity: 0;
+    /* Starts pushed down, slightly shrunk, and heavily blurred */
+    transform: translateY(20px) scale(0.95);
+    filter: blur(12px);
+  }
+  50% {
+    /* Blur clears up quickly so text becomes readable */
+    filter: blur(0px);
+  }
+  70% {
+    opacity: 1;
+    /* Bounces slightly past its final size to keep the game's jelly physics */
+    transform: translateY(-2px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes revealShine {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+// .is-revealed-board {
+//   background-color: #f8f9fa; /* A soft, neutral gray */
+//   border-radius: 16px;
+//   padding: 12px;
+//   border: 2px dashed #dee2e6;
+// }
+
+// .is-revealed-board input,
+// .is-revealed-board .equation-slot {
+//   background-color: #fff3cd !important;
+//   border-color: #ffe69c !important;
+//   color: #664d03 !important;
+// }
+
+// button.bar-box:active,
+// .bar-box:active {
+//   transform: none !important;
+// }
+
+/* --- Slide-in Animation --- */
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.bar-box__placeholder {
+  color: #94a3b8;
+  font-weight: normal;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* ======================================================== */
+/* STEP 2B: COMBINED CARRY-OVER HINT & VISUAL BLOCKS        */
+/* ======================================================== */
+
+// .change-identify__title {
+//   display: flex;
+//   align-items: center; /* Keeps icon vertically centered with the stack */
+//   gap: 1.25rem;
+//   padding: 1rem 1.25rem;
+//   background: #ffffff;
+//   border: 1px solid rgba(226, 232, 240, 0.8);
+//   border-radius: 12px;
+//   box-shadow: 0 4px 6px rgba(61, 64, 91, 0.02);
+//   margin-bottom: 1.5rem;
+// }
+
+// .change-identify__title-icon {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 52px;
+//   height: 52px;
+//   flex-shrink: 0;
+
+//   /* Peach Box */
+//   background: rgba(199, 104, 79, 0.12);
+//   border: 1px solid rgba(199, 104, 79, 0.3);
+//   border-radius: 12px;
+//   color: #c7684f;
+// }
+
+// .change-identify__carry-hint {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 0.2rem;
+//   width: 100%;
+// }
+
+// /* --- THE TEXT EXPLANATION --- */
+// .v-hint-text {
+//   margin: 0;
+//   font-size: 0.85rem !important; /* 🔥 Slightly smaller text */
+//   color: #3d405b;
+//   line-height: 1.3;
+//   font-family: "ActualComicSans", cursive;
+
+//   strong {
+//     color: #c7684f;
+//     font-weight: 800;
+//   }
+// }
+
+// /* --- THE VISUAL BLOCKS --- */
+// .change-identify__visual-blocks {
+//   display: flex;
+// }
+
+// .v-math-row {
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-start;
+//   gap: 0.35rem; /* 🔥 Pulled the blocks closer together */
+// }
+
+// .v-operator {
+//   font-size: 1.1rem; /* 🔥 Scaled down the + and - signs */
+//   font-weight: 900;
+//   color: #3d405b;
+//   font-family: "ActualComicSans", cursive;
+// }
+
+// .v-block {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   font-size: 0.72rem; /* Smaller internal text */
+//   font-weight: 800; /* Bumped weight so it stays readable when small */
+//   border-radius: 5px;
+//   color: #ffffff;
+//   height: 22px;
+//   font-family: "ActualComicSans", cursive;
+//   box-shadow:
+//     inset 0 2px 0 rgba(255, 255, 255, 0.3),
+//     0 2px 0 rgba(0, 0, 0, 0.1); /* Adjusted shadow for the new height */
+//   letter-spacing: 0.05em;
+//   text-transform: uppercase;
+// }
+
+// .v-block--small {
+//   background-color: #bae6fd;
+//   color: #0369a1;
+//   border-color: #38bdf8;
+//   width: 65px; /* Scaled down */
+// }
+
+// .v-block--change {
+//   background-color: #fef08a;
+//   color: #a16207;
+//   border-color: #facc15;
+//   width: 65px; /* Scaled down */
+// }
+
+// .v-block--large {
+//   background-color: #bbf7d0;
+//   color: #15803d;
+//   border-color: #4ade80;
+//   width: 65px; /* Scaled down */
+//   font-size: 0.7rem;
+// }
+
+// /* Specific pulse animations to draw attention */
+// .v-block--pulse-end {
+//   height: 20px;
+//   background: #4ade80;
+//   color: #14532d;
+//   border: 2px solid #22c55e;
+//   animation: visualPulse 2s infinite ease-in-out;
+// }
+
+// .v-block--pulse-start {
+//   background: #60a5fa;
+//   color: #1e3a8a;
+//   border: 2px solid #3b82f6;
+//   animation: visualPulse 2s infinite ease-in-out;
+// }
+
+// @keyframes visualPulse {
+//   0%,
+//   100% {
+//     transform: scale(1);
+//     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+//   }
+//   50% {
+//     transform: scale(1.05);
+//     box-shadow: 0 3px 8px rgba(61, 64, 91, 0.15);
+//   }
+// }
+
+/* --- THE VISUAL BLOCKS --- */
+
+.change-identify__title__2b {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0rem 1rem;
+  margin-top: 1rem;
+
+  padding: 0.6rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 0 #f1f5f9;
+  margin-bottom: 2rem;
+  // margin-bottom: 1.5rem;
+  @include ut.breakpoint(medium) {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 1.5rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #3d405b;
+    line-height: 1.55;
+    font-family: "ActualComicSans", cursive;
+    @include ut.breakpoint(medium) {
+      font-size: 0.95rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.85rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.75rem;
+    }
+  }
+
+  strong {
+    color: #e07a5f;
+    font-weight: 700;
+    font-style: normal;
+  }
+}
+
+.v-hint-text {
+  font-size: 0.85rem !important;
+  font-family: "ActualComicSans", cursive;
+  margin-bottom: 0.2rem;
+}
+.change-identify__visual-blocks {
+  display: flex;
+}
+
+.v-math-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem;
+  margin-bottom: 0.2rem;
+}
+
+.v-operator {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #3d405b;
+  font-family: "ActualComicSans", cursive;
+}
+
+/* Base Block Styling */
+.v-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  border-radius: 6px;
+  height: 24px;
+  font-family: "ActualComicSans", cursive;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.4),
+    0 2px 0 rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid transparent; /* Replaced by specific color classes */
+}
+
+/* 1. SIZE MODIFIERS */
+.v-block--small {
+  width: 70px;
+  @include ut.breakpoint(small) {
+    width: 55px;
+    font-size: 0.7rem !important;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.55rem !important;
+    width: 42px;
+  }
+}
+
+.v-block--large {
+  width: 70px;
+  font-size: 0.75rem;
+  @include ut.breakpoint(small) {
+    width: 55px;
+    font-size: 0.7rem !important;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.55rem !important;
+    width: 42px;
+  }
+}
+
+/* 2. SEMANTIC COLOR MODIFIERS (Matches the images perfectly!) */
+.v-block--start {
+  height: 20px;
+  background-color: #bae6fd; /* Pastel Blue */
+  color: #0369a1; /* Dark Blue Text */
+  border-color: #7dd3fc;
+}
+
+.v-block--change {
+  height: 20px;
+  background-color: #fef08a; /* Pastel Yellow */
+  color: #a16207; /* Dark Brown Text */
+  border-color: #fde047;
+}
+
+.v-block--end {
+  height: 20px;
+  background-color: #bbf7d0; /* Pastel Green */
+  color: #15803d; /* Dark Green Text */
+  border-color: #86efac;
+}
+
+/* 3. UNIVERSAL PULSE ANIMATION */
+.v-block--pulse {
+  height: 18px;
+  border-width: 2px; /* Makes the pulsing block's border slightly bolder */
+  animation: visualPulse 2s infinite ease-in-out;
+}
+@keyframes visualPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.4),
+      0 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.5),
+      0 4px 10px rgba(61, 64, 91, 0.15);
+  }
+}
+
+/* --- THE ABSOLUTE FLOATING TAG --- */
+.v-action-tag {
+  position: absolute;
+  top: -10px; /* Pulls it halfway up over the border */
+  right: 16px; /* Aligns it to the right */
+  padding: 0.4rem 1.1rem;
+  border-radius: 99px; /* Pill shape */
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-family: "ActualComicSans", cursive;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); /* Gives it a slight pop off the page */
+  z-index: 10;
+
+  @include ut.breakpoint(medium) {
+    top: -20px;
+    right: 7px;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.75rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.65rem;
+  }
+}
+
+/* Tag Step 2a */
+.v-action-tag--step2a {
+  position: absolute;
+  top: -10px; /* Pulls it halfway up over the border */
+  right: 16px;
+  transform: translateY(-50%);
+  background-color: #fef08a;
+  color: #a16207;
+  border: 3px solid #fde047;
+  padding: 0.4rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  box-shadow: none !important; /* Soft drop shadow */
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
+  z-index: 10;
+  margin: 0rem 1rem;
+  margin-top: 1rem;
+  @include ut.breakpoint(medium) {
+    top: -20px;
+    right: 7px;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.75rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.65rem;
+  }
+}
+
+/* Green tag for INCREASE */
+.v-action-tag--end {
+  background: #dcfce7;
+  color: #14532d;
+  border: 1px solid #4ade80;
+
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/* Blue tag for DECREASE */
+.v-action-tag--start {
+  background: #e0f2fe;
+  color: #0c4a6e;
+  border: 1px solid #38bdf8;
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  // background: linear-gradient(180deg, #3d405b 0%, #1f2235 100%);
+  // box-shadow: 3px 3px 0 #e9b50b;
+  // color: white;
+}
+
+/* --- THE TEXT RECAP --- */
+.v-hint-text {
+  margin: 0;
+  font-size: 0.8rem !important;
+  color: #3d405b;
+  line-height: 1.2;
+  font-family: "ActualComicSans", cursive;
+  @include ut.breakpoint(medium) {
+    font-size: 0.75rem !important;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.7rem !important;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.6rem !important;
+  }
+
+  strong {
+    color: #c7684f;
+    font-weight: 800;
+  }
+}
+
+/* ======================================================== */
+/* STEP 2B: DISMISSIBLE TIP CARD – POLISHED                 */
+/* ======================================================== */
+.hint-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(
+    15,
+    23,
+    42,
+    0.85
+  ); /* 🔥 Changed from 0.45 to 0.85 for a near-solid dark backdrop */
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem 2rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.change-identify__hint {
+  background: white;
+  // border: 3px solid #fcd34d;
+  border-radius: 24px;
+  padding: 1.5rem 1.4rem 1.2rem;
+  text-align: center;
+  box-shadow:
+    0 8px 0 #e6b85c,
+    0 16px 32px rgba(61, 64, 91, 0.1),
+    inset 0 2px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+
+  margin: 0; /* Replaces the old margin-bottom so it centers perfectly */
+  width: 100%;
+  max-width: 1050px;
+  max-height: 90vh; /* Prevents it from going off-screen */
+  overflow-y: auto; /* Allows scrolling on small phone screens */
+  overflow-x: hidden;
+
+  /* Decorative top accent */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    height: 6px;
+    background: #fcd34d;
+    border-radius: 0 0 6px 6px;
+  }
+
+  .hint-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: 2.5rem;
+    text-transform: capitalize;
+
+    color: #3d405b;
+    margin-bottom: 3rem;
+    font-weight: 800;
+    @include ut.breakpoint(medium) {
+      margin-bottom: 2rem;
+
+      font-size: 1.5rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    &__main {
+      margin: 0;
+      display: inline-flex;
+      text-transform: uppercase;
+      color: #e07a5f;
+    }
+  }
+  .hint-icon {
+    font-size: 1.6rem;
+  }
+
+  .hint-question {
+    margin: 0.5rem 0 1.2rem 0;
+    color: #3d405b;
+    font-size: 1.4rem;
+    font-weight: 600;
+    // text-align: center;
+
+    em {
+      color: #b45309;
+      font-style: normal;
+      font-weight: 800;
+      border-bottom: 2px dashed #fcd34d;
+      margin-left: 0.3rem;
+    }
+
+    @include ut.breakpoint(large) {
+      font-size: 1.1rem;
+    }
+    @include ut.breakpoint(medium) {
+      font-size: 0.9rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.8rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.75rem;
+    }
+  }
+  .hint-list {
+    font-family: "ActualComicSans", cursive;
+    @include ut.breakpoint(medium) {
+      font-size: 0.75rem;
+      padding: 0 1rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.65rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.6rem;
+      padding: 0;
+      padding-left: 1rem;
+    }
+  }
+  .hint-text {
+    position: relative;
+
+    color: #3d405b;
+    font-weight: 100 !important;
+    margin: 0 auto 1.8rem auto; /* Centers the box inside the card */
+    max-width: 80%; /* Keeps lines from getting too long */
+    line-height: 1.7;
+    font-size: 0.9rem;
+    background: #ffffff; /* Solid white background to make text pop */
+    padding: 1.2rem 1.5rem;
+    border-radius: 16px;
+    border-left: 6px solid #fcd34d; /* Thick accent edge */
+    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    box-shadow:
+      rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    text-align: left; /* Left-aligns text so bullets are perfectly straight */
+
+    p {
+      margin: 0;
+      color: inherit;
+    }
+
+    strong {
+      // background: #3d405b;
+      // color: white;
+      font-weight: 800;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+    }
+
+    em {
+      color: #e07a5f;
+      font-style: normal;
+      font-weight: 700;
+      border-bottom: 2px dashed #e07a5f;
+    }
+  }
+
+  /* 🔥 THE ABSOLUTE CENTERED TAG (Updated for a full sentence) */
+  .hint-text-tag {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fef08a;
+    color: #3d405b;
+    border-color: #facc15;
+    padding: 0.35rem 1.2rem;
+    border-radius: 99px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: 2px solid #3d405b;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+
+    /* Safety rules so it doesn't break on small screens */
+    width: 90%;
+    max-width: max-content;
+    text-align: center;
+    line-height: 1.3;
+    @include ut.breakpoint(medium) {
+      font-size: 0.75rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.65rem;
+    }
+  }
+
+  .hint-models {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-bottom: 1.4rem;
+    flex-wrap: wrap;
+    @include ut.breakpoint(medium) {
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+      flex-wrap: nowrap;
+    }
+    @include ut.breakpoint(small) {
+      gap: 0.3rem;
+    }
+  }
+
+  .hint-model {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hint-label {
+    font-weight: 900;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    padding: 0.2rem 1rem;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+    margin-top: 0.2rem;
+
+    &.increase {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1.5px solid #86efac;
+      @include ut.breakpoint(medium) {
+        font-size: 0.8rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.7rem;
+      }
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.6rem;
+      }
+    }
+
+    &.decrease {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1.5px solid #fca5a5;
+      @include ut.breakpoint(medium) {
+        font-size: 0.8rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.7rem;
+      }
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.6rem;
+      }
+    }
+  }
+
+  .hint-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+    font-weight: 600;
+    @include ut.breakpoint(medium) {
+      font-size: 0.8rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.7rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.6rem;
+    }
+  }
+}
+
+/* Mini bar model */
+.hint-bar-model {
+  width: 250px;
+  pointer-events: none;
+  gap: 5px;
+  @include ut.breakpoint(medium) {
+    width: 150px;
+  }
+  @include ut.breakpoint(small) {
+    width: fit-content;
+  }
+  @include ut.breakpoint(xSmall) {
+  }
+}
+
+.hint-bar-block {
+  padding: 0.45rem 0.4rem;
+}
+
+.hint-bar-bottom {
+  gap: 3px;
+}
+
+.hint-bar-start {
+  flex: 6;
+}
+
+.hint-bar-change,
+.hint-bar-end {
+  flex: 4;
+}
+
+.hint-bar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  @include ut.breakpoint(medium) {
+    // padding: 0.32rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.7rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.5rem;
+  }
+}
+
+.hint-list__end {
+  margin-bottom: 0.2rem;
+  strong {
+    background-color: #bbf7d0;
+    color: #15803d;
+    border-color: #4ade80;
+  }
+}
+
+.hint-list__start {
+  strong {
+    background-color: #bae6fd;
+    color: #0369a1;
+    border-color: #38bdf8;
+  }
+}
+
+/* Dismiss button */
+.hint-dismiss-btn {
+  width: fit-content;
+  font-size: 1.2rem;
+  padding: 0.6rem 2rem;
+  min-height: auto;
+  letter-spacing: 0.5px;
+  border-radius: 999px;
+  box-shadow:
+    0 4px 0 #3d405b,
+    inset 0 -3px 0 rgba(0, 0, 0, 0.1),
+    inset 0 2px 0 rgba(255, 255, 255, 0.6);
+
+  &:hover {
+    background: #fcd34d;
+    transform: translateY(2px);
+    box-shadow:
+      0 2px 0 #3d405b,
+      inset 0 -3px 0 rgba(0, 0, 0, 0.1),
+      inset 0 2px 0 rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* Re‑open button – tiny floating pill */
+.change-identify__hint-reopen {
+  // position: absolute;
+  // margin-bottom: 1.5rem;
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  // gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #e07a5f;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  animation: visualPulseEnhanced 2s infinite ease-in-out;
+  // border: 2px dashed #fcd34d;
+  // background: #fffbeb;
+  // padding: 0.4rem 1rem;
+  // border-radius: 999px;
+  // box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+  &:hover {
+    transform: scale(1.1);
+    // border-style: solid;
+    // transform: translateY(-2px);
+    // box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@keyframes visualPulseEnhanced {
+  0%,
+  100% {
+    border-radius: 50%;
+    transform: scale(1);
+    box-shadow:
+      0 0 0 0 rgba(224, 122, 95, 0.6),
+      /* coral glow ring */ 0 4px 6px rgba(61, 64, 91, 0.06);
+  }
+  50% {
+    border-radius: 50%;
+    transform: scale(1.06);
+    box-shadow:
+      0 0 0 6px rgba(224, 122, 95, 0.15),
+      /* larger soft coral glow */ 0 8px 16px rgba(61, 64, 91, 0.2);
+  }
+}

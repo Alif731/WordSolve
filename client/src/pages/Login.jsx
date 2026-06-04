@@ -12,6 +12,7 @@ import { apiSlice } from "../store/slices/apiSlice";
 import getDefaultRouteForRole from "../utils/getDefaultRouteForRole";
 import PasswordField from "../components/PasswordField";
 import { toast } from "react-toastify";
+import { validatePassword } from "../utils/validatePassword";
 
 import "../sass/page/loginPage.scss";
 
@@ -67,7 +68,7 @@ const Login = () => {
         }
 
         dispatch(setCredentials({ ...profile }));
-        navigate(getDefaultRouteForRole(profile.role), { replace: true });
+        navigate(getDefaultRouteForRole(profile.role, profile.loginCount), { replace: true });
       } catch (_error) {
         if (!isActive) {
           return;
@@ -110,7 +111,7 @@ const Login = () => {
     dispatch(setCredentials({ ...payload }));
 
     toast.success(`Welcome back, ${payload.username}!`);
-    navigate(getDefaultRouteForRole(payload?.role), { replace: true });
+    navigate(getDefaultRouteForRole(payload?.role, payload?.loginCount), { replace: true });
   };
 
   const handleLogin = async (e) => {
@@ -139,6 +140,12 @@ const Login = () => {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
+      return;
+    }
+
+    const { error: passwordError } = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
@@ -273,9 +280,9 @@ const Login = () => {
                 ? "Checking session..."
                 : isLoginLoading || isRegisterLoading
                   ? "Loading..."
-                : isLogin
-                  ? "Login"
-                  : "Sign Up"}
+                  : isLogin
+                    ? "Login"
+                    : "Sign Up"}
             </button>
 
             <div className="login__divider">

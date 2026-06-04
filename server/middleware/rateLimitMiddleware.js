@@ -68,8 +68,15 @@ const oauthLimiter = createJsonRateLimiter({
   message: 'Too many OAuth attempts. Please try again later.',
 });
 
+const globalLimiter = createJsonRateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 1000, // Limit each IP to 1000 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+
 module.exports = {
   loginLimiter,
   registerLimiter,
   oauthLimiter,
+  globalLimiter,
 };

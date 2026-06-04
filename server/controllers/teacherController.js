@@ -1,10 +1,16 @@
 // teacherController.js
 const User = require("../models/User");
+const {
+  MASTERY_MIN_ATTEMPTS,
+  MASTERY_SCORE_THRESHOLD,
+  MASTERY_SUCCESS_RATE,
+  WINDOW_SIZE,
+} = require("../utils/learningEngine");
 
 exports.getClassroomStats = async (req, res) => {
   try {
     const students = await User.find({ role: "student" }).select(
-      "username mastery",
+      "username mastery avatar avatarSeed",
     );
 
     const classroomData = students.map((student) => {
@@ -38,7 +44,15 @@ exports.getClassroomStats = async (req, res) => {
       };
     });
 
-    res.json(classroomData);
+    res.json({
+      classroomData,
+      masteryConfig: {
+        masteryMinAttempts: MASTERY_MIN_ATTEMPTS,
+        masteryScoreThreshold: MASTERY_SCORE_THRESHOLD,
+        masterySuccessRate: MASTERY_SUCCESS_RATE,
+        windowSize: WINDOW_SIZE,
+      },
+    });
   } catch (error) {
     console.error("Teacher Stats Error:", error);
     res.status(500).json({ error: "Failed to fetch analytics" });

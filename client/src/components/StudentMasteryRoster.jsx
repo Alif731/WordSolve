@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Users,
   Search,
@@ -12,15 +12,18 @@ import "../sass/components/studentRoster.scss";
 
 import UserAvatar from "./UserAvatar";
 
-const StudentMasteryRoster = ({ classroomData }) => {
+const StudentMasteryRoster = ({ classroomData, masteryConfig }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
+
+  const minAttempts = masteryConfig?.masteryMinAttempts || 5;
 
   const filteredStudents = [];
 
   if (classroomData) {
     for (let i = 0; i < classroomData.length; i++) {
       const student = classroomData[i];
+      // console.log(`Student ${student.username} avatar:`, student.avatarSeed); // Check this!
 
       if (student.username.toLowerCase().includes(searchTerm.toLowerCase())) {
         let totalAttempts = 0;
@@ -79,8 +82,8 @@ const StudentMasteryRoster = ({ classroomData }) => {
           >
             <div className="student-info">
               <UserAvatar
-                name={student.avatarSeed || student.username}
-                variant={student.avatar || "beam"}
+                name={student.avatarSeed}
+                variant={student.avatar}
                 size={44}
               />
               <div className="name-group">
@@ -146,8 +149,10 @@ const StudentMasteryRoster = ({ classroomData }) => {
                 <h4 className="list-title">Concept Mastery Breakdown</h4>
 
                 {selectedStudent.nodes?.map((node, index) => {
-                  // We read the 'estimate' and convert it to a percentage
-                  const percentScore = (node.estimate || 0) * 100;
+                  // Progress based on attempts toward mastery threshold
+                  const attempts = node.attempts || 0;
+                  const percentScore =
+                    Math.min(attempts / minAttempts, 1) * 100;
 
                   return (
                     <div key={index} className="node-detail-item">
@@ -169,7 +174,7 @@ const StudentMasteryRoster = ({ classroomData }) => {
                       <div className="mastery-visual">
                         <div className="progress-text">
                           <span>Mastery Progress:</span>
-                          <strong>{percentScore.toFixed(2)}%</strong>
+                          <strong>{percentScore.toFixed(0)}%</strong>
                         </div>
                         <div className="progress-track">
                           <div

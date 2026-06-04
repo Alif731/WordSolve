@@ -2,13 +2,19 @@
 
 $breakpoints: (
   "xSmall": 23.43em,
+  // ~375px: Small phones (iPhone SE)
   "small": 26.56em,
+  // ~425px: Large phones (Pro Max)
   "medium": 43.75em,
+  // 700px: Tablets (Portrait)
   "large": 56.25em,
+  // 900px: Tablets (Landscape) / Small laptops
   "larger": 64em,
-  "xLarge": 90em,
+  // 1024px: Standard laptops / iPad Pro
+  "xLarge": 90em, // 1440px: Large desktop monitors
 );
 
+// Desktop-first mixin (applies to $size and smaller)
 @mixin breakpoint($size) {
   $val: map.get($breakpoints, $size);
 

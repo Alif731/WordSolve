@@ -1,17 +1,28 @@
-footer {
-  // color: #9a8c98;
-  color: #0071e9;
-  // background-color: #F4F1DE;
-  // background-color: #17172b;
+@use "../util/breakpoint" as ut;
+$slate-blue: #729d88;
+$bg-cream: #fffaf3;
+$coral-red: #e07a5f;
+
+.footer {
   margin-top: auto;
   width: 100%;
   text-align: center;
   font-weight: bold;
   font-size: 1.1rem;
   padding: 5px 0;
+  color: #0071e9;
+  background-color: #ffffff;
   box-shadow:
-    rgba(224, 122, 95, 0.231372549) 0px 0px 5px 0px,
-    #e07a5f 0px 0px 1px 0px;
-  // border-radius: 20px;
-  // margin: 10px;
+    0 10px 25px rgb(61 64 91 / 11%),
+    inset 0 -1px 0 rgba(242, 204, 143, 0.55);
+  @include ut.breakpoint(medium) {
+    font-size: 1rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.9rem;
+  }
+  &.logged-in {
+    color: $slate-blue !important;
+    background: rgba(255, 255, 255, 0.72);
+  }
 }

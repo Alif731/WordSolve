@@ -1,0 +1,55 @@
+/* ======================================================== */
+/* MINIATURE BAR MODEL ICON                                 */
+/* ======================================================== */
+
+.mini-barmodel-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 3px; /* Space between top and bottom row */
+  width: 35px; /* Slightly larger than standard 24px icon to show detail */
+  justify-content: center;
+}
+
+.mini-barmodel-icon__row {
+  display: flex;
+  gap: 3px; /* Space between the blue and yellow blocks */
+  width: 100%;
+}
+
+.mini-block {
+  height: 8px; /* Thickness of the tiny bars */
+  border-radius: 3px;
+  /* Adds a tiny 3D shine to the top edge of the blocks */
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Specific Block Colors & Widths */
+.mini-block--green {
+  width: 100%;
+  background-color: #4ade80; /* Match your success green */
+  border: 1px solid #22c55e;
+}
+
+.mini-block--blue {
+  flex: 1.4; /* Takes up about 60% of the bottom row */
+  background-color: #93c5fd; /* Soft blue */
+  border: 1px solid #60a5fa;
+}
+
+.mini-block--yellow {
+  flex: 0.8; /* Takes up the remaining 40% */
+  background-color: #fcd34d; /* Bright warm yellow */
+  border: 1px solid #fbbf24;
+}
+
+/* OPTIONAL UPGRADE: 
+  Since the icon brings its own colors, you can remove the terracotta 
+  color from the parent container so it doesn't clash!
+*/
+.change-identify__title-icon {
+  /* Change the background from peach to a soft, neutral slate to make the colors pop */
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}

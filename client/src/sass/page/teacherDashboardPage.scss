@@ -3,11 +3,19 @@
 .teacher-dashboard {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 1.5rem 1rem 2.5rem;
+  // padding: 1.5rem 1rem 2.5rem;
+  // width: 100%;
   // display: flex;
   min-height: 82vh;
   flex-direction: column;
   justify-content: center;
+  overflow-x: hidden;
+  @include ut.breakpoint(larger) {
+    margin: 2rem;
+  }
+  @include ut.breakpoint(medium) {
+    margin: 1rem;
+  }
 }
 
 .teacher-dashboard__hero {
@@ -17,7 +25,7 @@
   gap: 1rem;
   margin-bottom: 1.2rem;
   padding: 1.5rem;
-  border: 2px solid #f2cc8f;
+  // border: 2px solid #f2cc8f;
   border-radius: 24px;
   background-color: #fdfbfb;
   background: linear-gradient(
@@ -28,7 +36,12 @@
   );
   // background: linear-gradient(135deg, #fffaf2 0%, #fef0d9 50%, #fffaf2 100%);
   box-shadow: rgba(61, 64, 91, 0.08) 0 12px 24px -12px;
-
+  @include ut.breakpoint(medium) {
+    padding: 1rem;
+  }
+  @include ut.breakpoint(small) {
+    // font-size: 0.9rem;
+  }
   h1 {
     margin: 0;
     color: #3d405b;
@@ -63,15 +76,12 @@
   font-weight: 700;
   text-decoration: none;
 }
-
-.teacher-dashboard__secondaryAction,
 .teacher-dashboard__inlineLink {
   color: #3d405b;
-  background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(61, 64, 91, 0.1);
   transition: all 0.8s;
   &:hover {
-    background-color: #3d405b;
+    background-color: #3d405b !important;
     color: #81b29a;
     transform: translateY(2px);
     box-shadow:
@@ -91,9 +101,40 @@
 
 .teacher-dashboard__secondaryAction {
   padding: 0.8rem 1.15rem;
-  color: #f2e9e4;
-  background: #374151;
+  background: linear-gradient(135deg, #fff6ea 0%, #fffdf8 100%);
+  color: #c7684f;
+  border: 1px solid rgba(242, 204, 143, 0.84);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.94),
+    0 10px 20px rgba(61, 64, 91, 0.05);
   box-sizing: border-box;
+  transition: all 0.5s;
+  &:hover {
+    background: #3d405b !important;
+    color: #81b29a;
+    transform: translateY(2px);
+    box-shadow:
+      rgb(0 0 0 / 49%) 0px 2px 4px,
+      rgb(0 0 0) 0px 7px 13px -3px,
+      #81b29a 0px -3px 0px inset;
+    .sike {
+      display: inline-block;
+      transform: scale(1.05);
+      &__options {
+        border: 3px solid #81b29a;
+        color: #81b29a;
+      }
+    }
+  }
+  @include ut.breakpoint(medium) {
+    padding: 0.4rem 1.15rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.9rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.7rem;
+  }
 }
 
 .teacher-dashboard__grid {
@@ -121,6 +162,12 @@
     color: #81b29a;
     font-size: 1rem;
     font-weight: bold;
+    @include ut.breakpoint(medium) {
+      font-size: 0.9rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.8rem;
+    }
   }
 
   strong {
@@ -129,6 +176,15 @@
     color: #3d405b;
     font-size: 1.9rem;
     line-height: 1.1;
+    @include ut.breakpoint(large) {
+      font-size: 1.4rem;
+    }
+    @include ut.breakpoint(medium) {
+      font-size: 1.1rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 1rem;
+    }
   }
 
   small {
@@ -136,6 +192,9 @@
     margin-top: 0.45rem;
     color: #8f8f91;
     font-size: 0.9rem;
+    @include ut.breakpoint(medium) {
+      font-size: 0.7rem;
+    }
   }
 }
 
@@ -150,11 +209,26 @@
     margin: 0;
     color: #81b29a;
     font-size: 1.2rem;
+    @include ut.breakpoint(large) {
+      font-size: 1.2rem;
+    }
+    @include ut.breakpoint(medium) {
+      font-size: 1rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.9rem;
+    }
   }
 
   p {
     margin: 0.4rem 0 0;
     color: #8f8f91;
+    @include ut.breakpoint(medium) {
+      font-size: 0.9rem;
+    }
+    // @include ut.breakpoint(xSmall) {
+    //   font-size: 0.8rem;
+    // }
   }
 }
 
@@ -162,7 +236,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 30px; // Increased padding for a "premium" feel
+  padding: 1.5rem 1.1rem;
+  // padding: 25px 30px; // Increased padding for a "premium" feel
+
+  @include ut.breakpoint(medium) {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 .teacher-dashboard__panel--error {
   border-color: #f87171;
@@ -185,8 +265,8 @@
 
 .teacher-dashboard__action {
   // FIXED SIZE: This ensures it "takes up the same space" regardless of text
-  min-width: 220px;
-  height: 54px;
+  // min-width: 220px;
+  height: 44px;
   border-radius: 12px;
   border: 1px solid transparent;
   font-family: inherit;
@@ -197,11 +277,18 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  padding: 0.5rem;
 
   .btn-content {
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 0.8rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.7rem;
   }
 
   // GREEN STYLE (Enable)
@@ -293,7 +380,7 @@
 
 @media (max-width: 900px) {
   .teacher-dashboard__hero {
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
   }
 
@@ -308,8 +395,7 @@
   }
 
   .teacher-dashboard__secondaryAction,
-  .teacher-dashboard__inlineLink,
-  .teacher-dashboard__action {
+  .teacher-dashboard__inlineLink {
     width: 100%;
   }
 
@@ -347,6 +433,16 @@
     color: #0071e9; // Soft orange text on hover
     background: #d5e5f7; // Very light orange background
 
+    @include ut.breakpoint(medium) {
+      font-size: 0.8rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.7rem;
+      padding: 5px 12px;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.5rem;
+    }
     // Hover effect for INACTIVE tabs
     &:hover:not(.active) {
       color: #ffffff; // Soft orange text on hover
@@ -373,6 +469,9 @@
   flex-wrap: wrap; // Allows wrapping on smaller screens
   gap: 15px;
   margin-bottom: 20px;
+  @include ut.breakpoint(medium) {
+    align-items: start;
+  }
 
   .live-indicator {
     display: flex;
@@ -420,18 +519,24 @@
   }
 
   input {
-    font-family: cursive;
-
+    font-family: "ActualComicSans", cursive;
     background: transparent;
     border: none;
     color: #0071e9;
-
     font-size: 1rem;
     outline: none;
     width: 100%;
-
     &::placeholder {
       color: #3d405b;
+    }
+    @include ut.breakpoint(medium) {
+      font-size: 0.8rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.7rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.6rem;
     }
   }
 
@@ -451,7 +556,6 @@
   }
 }
 
-/* --- Empty Search State --- */
 .empty-message {
   text-align: center;
   padding: 40px;
@@ -460,6 +564,12 @@
   background: rgba(255, 255, 255, 0.02);
   border-radius: 12px;
   border: 1px dashed rgba(255, 255, 255, 0.1);
+  @include ut.breakpoint(medium) {
+    padding: 20px;
+  }
+  // @include ut.breakpoint(small) {
+  //   font-size: 0.7rem;
+  // }
 }
 
 /* Animation for the Live Dot */
@@ -543,6 +653,15 @@
       font-size: 1.2rem;
       font-weight: 600;
       margin: 0;
+      @include ut.breakpoint(large) {
+        font-size: 1.2rem;
+      }
+      @include ut.breakpoint(medium) {
+        font-size: 1rem;
+      }
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.9rem;
+      }
 
       svg {
         color: #81b29a; // Red icon for "Alert"
@@ -753,6 +872,15 @@
     text-transform: uppercase;
     font-size: 0.85rem;
     margin-left: 4px;
+    @include ut.breakpoint(medium) {
+      font-size: 0.7rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.6rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.5rem;
+    }
   }
 }
 
@@ -767,6 +895,15 @@
   align-items: center;
   justify-content: flex-end;
   gap: 6px;
+  @include ut.breakpoint(medium) {
+    font-size: 0.6rem !important;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.5rem !important;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.4rem !important;
+  }
 }
 
 @keyframes diagnostic-pulse {
@@ -809,8 +946,9 @@
       position: absolute;
       z-index: 100;
       bottom: 125%;
-      left: 50%;
-      margin-left: -100px;
+      right: -30%;
+      // left: 50%;
+      // margin-left: -100px;
       transition: opacity 0.3s;
       font-size: 0.75rem;
     }

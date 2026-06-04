@@ -10,7 +10,7 @@ const RoleRoute = ({ allowedRoles = [] }) => {
   }
 
   if (allowedRoles.length && !allowedRoles.includes(userInfo.role)) {
-    return <Navigate to={getDefaultRouteForRole(userInfo.role)} replace />;
+    return <Navigate to={getDefaultRouteForRole(userInfo.role, userInfo.loginCount)} replace />;
   }
 
   return <Outlet />;

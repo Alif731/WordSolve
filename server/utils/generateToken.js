@@ -10,10 +10,11 @@ const getJwtExpiresInDays = () => {
 const getJwtCookieOptions = () => {
   const expiresInDays = getJwtExpiresInDays();
 
+  const isDev = process.env.NODE_ENV === 'development';
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== 'development',
-    sameSite: 'strict',
+    secure: !isDev,
+    sameSite: isDev ? 'strict' : 'none',
     maxAge: expiresInDays * 24 * 60 * 60 * 1000,
   };
 };

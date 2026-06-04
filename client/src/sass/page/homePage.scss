@@ -1,35 +1,59 @@
+@use "../util/breakpoint" as ut;
 @import url("https://fonts.googleapis.com/css2?family=Playwrite+GB+J+Guides:ital@0;1&display=swap");
 
-// --- 1. VARIABLES ---
+$page-text: #3d405b;
+$page-text-soft: #6b7280;
+$page-accent: #f2cc8f;
+$page-gold: #f2cc8f;
+$page-sage: #81b29a;
+$page-bg: linear-gradient(180deg, #fffefb 0%, #fff7ef 100%);
 $primary-color: #1e3a8a; // Dark Blue
 $success-bg: #22c55e; // Green
 $error-bg: #ef4444; // Red
 $white: #ffffff;
-$gold: #f59e0b; // Gold/Yellow for highlights
+$gold: #f2cc8f; // Gold/Yellow for highlights
 $border-radius: 16px;
 $shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 
-// --- 2. PAGE CONTAINER ---
-.home-page {
-  max-width: 1200px;
-  margin: auto;
-  min-height: 86vh;
-  // background-color: whitesmoke;
-  font-family: cursive;
+.highlight1,
+.highlight2,
+.highlight3 {
+  color: #f2cc8f;
+  color: $page-accent;
+
+  font-weight: 800;
 }
 
-// --- 3. GAME HEADER (Title + Player Badge) ---
+.home-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  min-height: 86vh;
+  // padding: 1.25rem 1rem 2rem;
+  font-family: "ActualComicSans", cursive;
+  color: $page-text;
+}
+
 .game-header {
   // max-width: 1200px;
   // margin: 0.5rem;
-  margin: 1.5rem 0;
+  // width: fit-content;
+  padding: 0.4rem;
+  margin: 0.4rem 0;
   margin-right: 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; // Wrap on small phones
   gap: 1rem;
-
+  @include ut.breakpoint(medium) {
+    flex-wrap: wrap; // Wrap on small phones
+    gap: 0.5rem;
+    padding: 0rem;
+    margin: 0.5rem 0;
+  }
+  @include ut.breakpoint(small) {
+  }
+  @include ut.breakpoint(xSmall) {
+  }
   .game-title {
     font-size: 2rem;
     font-weight: 800;
@@ -37,18 +61,47 @@ $shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     margin: 0;
   }
 
+  .player-badge-div {
+    @include ut.breakpoint(medium) {
+      display: flex;
+      justify-content: center;
+      width: -webkit-fill-available;
+    }
+  }
   .player-badge {
     border-radius: 12px;
     border-right: 5px solid #f2cc8f;
     border-bottom: 5px solid #f2cc8f;
 
-    font-family: cursive;
+    font-family: "ActualComicSans", cursive;
 
-    color: #3d405b;
-    padding: 10px;
+    // color: #3d405b;
+    background: linear-gradient(180deg, #3d405b 0%, #1f2235 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Slight lift on hover
+    // animation: none;
+    color: white;
+    text-shadow: none;
+    cursor: pointer;
+    padding: 9px 10px;
     border-radius: 9999px;
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 0.8rem;
+    @include ut.breakpoint(large) {
+      width: fit-content;
+      font-size: 0.85rem;
+    }
+    @include ut.breakpoint(medium) {
+      justify-content: center;
+      width: fit-content;
+      font-size: 0.82rem;
+      flex: 1;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.72rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.62rem;
+    }
 
     // transition
     display: flex;
@@ -57,15 +110,20 @@ $shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     transition: all 0.5s ease-in-out;
     // animation: tilt-shaking 1s ease-in-out infinite;
 
-    &:hover {
-      background-color: #3d405b;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Slight lift on hover
-      // animation: none;
-      color: white;
-      text-shadow: none;
-      cursor: pointer;
-    }
+    // &:hover {
+    //   background-color: #3d405b;
+    //   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Slight lift on hover
+    //   // animation: none;
+    //   color: white;
+    //   text-shadow: none;
+    //   cursor: pointer;
+    // }
 
+    &__name {
+      margin-left: 6px;
+      // color: #e07a5f;
+      // text-transform: capitalize;
+    }
     // --- THE HOVER LOGIC ---
     strong {
       // 1. Hidden State (Default)
@@ -93,261 +151,393 @@ $shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 }
 
-// --- 4. MAIN GRID LAYOUT ---
 .home-layout {
   display: flex;
-  justify-content: space-evenly;
-  max-width: 1200px;
-  margin: 0 auto;
-  margin-bottom: 2rem;
-  @media (min-width: 768px) {
-    grid-template-columns: 2fr 1fr;
-  }
-}
-
-// --- 5. GAME SECTION (Left Column) ---
-.game-section {
-  display: flex;
   justify-content: center;
-  gap: 1.5rem;
+  margin: 0 auto 2rem;
 }
 
-// Status Cards (Loading, Mastered, Error Messages)
 .status-card {
-  padding: 3rem;
-  border-radius: $border-radius;
+  // width: min(100%, 720px);
+  padding: 2rem;
+  border-radius: 28px;
   text-align: center;
-  font-size: 1.25rem;
-  font-weight: bold;
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: $page-text;
+  background: $page-bg;
+  border: 1px solid rgba(242, 204, 143, 0.72);
+  box-shadow:
+    0 22px 42px rgba(61, 64, 91, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96);
 
   &.master {
-    background-color: #dcfce7; // Light green background
-    color: #166534; // Dark green text
-  }
-
-  &.loading {
-    color: #6b7280;
-    .spinner {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      display: inline-block;
-      animation: spin 1s linear infinite;
+    background: linear-gradient(180deg, #f8fcf8 0%, #eef7f0 100%);
+    border-color: rgba(129, 178, 154, 0.52);
+    color: #44735f;
+    margin: auto;
+    @include ut.breakpoint(medium) {
+      font-size: 1rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.8rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.7rem;
     }
   }
 
-  &.error-msg {
-    background-color: #fee2e2; // Light red background
-    color: #991b1b; // Dark red text
+  // .loading-next-overlay {
+  //   position: absolute;
+  //   inset: 0;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   background: rgba(255, 255, 255, 0.7); // already present
+  //   z-index: 10;
+
+  //   // Remove default card margins so it sits perfectly in the center
+  //   .status-card {
+  //     margin: 0;
+  //     background: transparent;
+  //     box-shadow: none;
+  //   }
+  // }
+
+  .status-card.error-msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    margin: 2rem auto;
+    max-width: 420px;
+
+    /* Soft Coral / Red Palette */
+    background-color: #fef2f2;
+    border-radius: 24px;
+    border: 4px solid #fecaca;
+
+    /* Chunky Jelly Physics for Errors */
+    box-shadow:
+      inset 0 4px 0 rgba(255, 255, 255, 1),
+      /* Top glass highlight */ 0 8px 0 #fca5a5,
+      /* Chunky 3D bottom */ 0 15px 30px rgba(239, 68, 68, 0.15); /* Soft glowing shadow */
+
+    /* Bounces in aggressively so the user notices it */
+    animation: errorPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
-}
 
-// Feedback Popup (Correct/Wrong Card)
-.feedback-card {
-  padding: 2rem;
-  border-radius: $border-radius;
-  box-shadow: $shadow;
-  text-align: center;
-  color: $white;
-
-  &.success {
-    background-color: $success-bg;
-    width: 40%;
-    max-width: 36rem;
-  }
-
-  &.error {
-    background-color: $error-bg;
-    width: 40%;
-    max-width: 36rem;
-  }
-
-  .feedback-icon {
-    rotate: 360deg;
-
-    font-size: 4rem;
+  /* The Warning Icon */
+  .error-msg__icon {
+    width: 64px;
+    height: 64px;
+    color: #ef4444;
+    background: #ffffff;
+    border-radius: 50%;
+    padding: 12px;
     margin-bottom: 1rem;
-    transition: all 0.5s;
-    &:hover {
-      rotate: 1.75turn;
+
+    /* Gives the icon its own mini 3D block feel */
+    border: 3px solid #fecaca;
+    box-shadow:
+      inset 0 -3px 0 rgba(239, 68, 68, 0.1),
+      0 4px 0 #fca5a5;
+
+    svg {
+      width: 100%;
+      height: 100%;
     }
   }
 
-  .feedback-title {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
+  /* Typography */
+  .error-msg__content {
+    margin-bottom: 1.5rem;
   }
 
-  .feedback-text {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-  }
-
-  .btn-next {
-    font-family: cursive;
-    background-color: $white;
-    color: #333;
-    font-weight: bold;
-    padding: 0.75rem 2rem;
-    border-radius: 9999px; // Pill shape
-    border: none;
+  .error-msg__title {
+    font-family: "ActualComicSans", "Comic Sans MS", cursive;
     font-size: 1.5rem;
+    font-weight: 900;
+    color: #991b1b;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-shadow: 0 1.5px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .error-msg__text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #b91c1c;
+    margin: 0;
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+
+  /* The Actionable Reload Button */
+  .error-msg__button {
+    font-family: "ActualComicSans", "Comic Sans MS", cursive;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 0.8rem 1.5rem;
+    border-radius: 16px;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.5s;
+    outline: none;
+
+    /* Matches the button physics of the rest of the game */
+    background-color: #ef4444;
+    color: #ffffff;
+    border: 2px solid #b91c1c;
+    box-shadow:
+      inset 0 3px 0 rgba(255, 255, 255, 0.4),
+      0 6px 0 #991b1b;
+
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      color: #f2e9e4;
-      background: #343463;
-      transform: scale(1.05);
-      cursor: pointer;
+      background-color: #dc2626;
+      transform: translateY(2px);
+      box-shadow:
+        inset 0 3px 0 rgba(255, 255, 255, 0.4),
+        0 4px 0 #991b1b;
+    }
+
+    &:active {
+      transform: translateY(6px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 0px 0 transparent;
+    }
+  }
+
+  /* Entrance Animation */
+  @keyframes errorPopIn {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.9);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-10px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
   }
 }
 
-// --- 6. SIDEBAR SECTION (Right Column) ---
-.sidebar-section {
-  // display: flex;
-  // flex-direction: column;
-  gap: 2rem;
-}
-
-// ZPD Box (Yellow Info Box)
-.zpd-card {
-  // background-color: #fef9c3; // Light yellow
-  display: flex;
-  align-items: center;
-  border-radius: 9999px;
-  border-left: 5px solid #eab308; // Darker yellow border
-  font-size: 1.5rem;
-  > p {
-    margin: 0px;
-    padding: 10px;
-    font-weight: bold;
+@keyframes popBounce {
+  0% {
+    transform: scale(1);
   }
-}
-.zpd-title {
-  color: #854d0e;
-  font-weight: bold;
-}
-.highlight {
-  font-weight: bolder;
-  color: #e07a5f;
-  margin-right: 0.4rem;
-}
-.highlight1 {
-  font-weight: bolder;
-  color: #edb151;
-}
-.highlight2 {
-  font-weight: bolder;
-  color: #edb151;
-  margin-left: 0.4rem;
-}
-.highlight3 {
-  font-weight: bolder;
-  color: #e07a5f;
-  margin-left: 0.4rem;
-  //   border-left: 5px solid #E07A5F;
-  // border-radius: 10px;
-  // padding-left: 0.5rem;
-}
-
-.zpd__text {
-  display: flex;
-  align-items: center;
-  border-radius: 9999px;
-  border-left: 5px solid #eab308;
-  font-size: 1.5rem;
-  padding: 10px;
-  color: #9a8c98;
-  font-weight: bold;
-
-  // transition
-  display: flex;
-  align-items: center;
-  cursor: default;
-  transition: all 0.3s ease;
-  // animation: tilt-shaking 1s ease-in-out infinite;
-
-  &:hover {
-    animation: none;
-    background-color: #22223b;
-    color: #9a8c98;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Slight lift on hover
+  40% {
+    transform: scale(1.08);
   }
-
-  // --- THE HOVER LOGIC ---
-  strong {
-    color: #f2e9e4;
-
-    // 1. Hidden State (Default)
-    max-width: 0; // Takes up no width
-    opacity: 1; // Invisible
-    overflow: hidden; // Hides the text that overflows width 0
-    white-space: nowrap; // Keeps text on one line so it slides out
-    transition:
-      max-width 0.8s ease-in-out,
-      opacity 0.8s ease-in-out,
-      margin 0.8s ease;
-    margin-right: 0; // No gap when hidden
+  70% {
+    transform: scale(0.97);
   }
-
-  // 2. Visible State (On Parent Hover)
-  &:hover strong {
-    max-width: 1000px; // Expand wide enough to fit the text
-    opacity: 1; // Fade in
-    margin-right: 0.5rem; // Add a small gap between message and username
-    color: #f2e9e4;
+  100% {
+    transform: scale(1);
   }
 }
 
-.card__header__type {
-  // text-decoration: overline;
-  // color: #E07A5F;
-  color: #e07a5f;
-  font-family: cursive;
-  margin: auto;
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  border-radius: 10px;
-  // padding: 10px 15px;
-  transition: 0.7s all;
-  // border-left: 5px solid #f2cc8f;
-  // border-right: 5px solid #f2cc8f;
-  width: fit-content;
-  margin-top: 1rem;
-  text-decoration: underline;
-  // border-bottom: 5px solid #81b29a;
+@keyframes shakeError {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    padding: 1rem 0.85rem 1.6rem;
+  }
+
+  .player-badge {
+    align-items: flex-start;
+    // flex-direction: column;
+    flex-direction: row;
+  }
+
+  .practice-summary {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    @include ut.breakpoint(medium) {
+      width: fit-content;
+    }
+  }
+
+  .practice-summary__stat {
+    // flex: 1 1 30%;
+    // min-width: 0;
+    @include ut.breakpoint(medium) {
+      flex: 1;
+    }
+    strong {
+      @include ut.breakpoint(medium) {
+        font-size: 0.85rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.8rem;
+      }
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.7rem;
+      }
+    }
+  }
+  .practice-summary__label {
+    @include ut.breakpoint(medium) {
+      font-size: 0.7rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.6rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.5rem;
+    }
+  }
+
+  .player-badge__copy strong {
+    font-size: 1.22rem;
+  }
 }
 
 /* --- Streak System Badge --- */
+// .streak__badge {
+//   position: relative;
+//   margin-left: auto;
+//   width: fit-content;
+//   font-family: "ActualComicSans", cursive;
+//   color: #ffffff;
+//   padding: 8px 20px;
+//   font-size: 1.1rem;
+//   font-weight: 800;
+//   color: #fff;
+//   overflow: hidden;
+//   border-radius: 10px;
+//   background: #22223b;
+//   border: 1px solid rgba(255, 255, 255, 0.1); // ← subtle unified border instead of 4 colored ones
+//   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08); // ← soft inner highlight
+
+//   &.pop-active {
+//     animation: popBounce 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+//   }
+//   &.shake-active {
+//     animation: shakeError 0.5s ease-in-out;
+//     background-color: #b91c1c;
+//     color: white;
+//     border-color: rgba(255, 255, 255, 0.1);
+//     .highlight1,
+//     .highlight2 {
+//       text-shadow: none;
+//       color: #f2cc8f;
+//     }
+//   }
+//   @include ut.breakpoint(medium) {
+//     // margin-left: 0;
+//     width: fit-content;
+//     font-size: 0.72rem;
+//   }
+//   @include ut.breakpoint(small) {
+//     font-size: 0.62rem;
+//   }
+//   @include ut.breakpoint(xSmall) {
+//     font-size: 0.47rem;
+//   }
+// }
 .streak__badge {
   position: relative;
-  margin-left: auto;
-  width: 20%;
-  text-align: center;
-  // background: linear-gradient(135deg, #f4f1de, #f2cc8f);
-  // border-right: 5px solid #f2cc8f;
-  // border-bottom: 5px solid #f2cc8f;
-  font-family: cursive;
-  color: #ffffff;
-  // background-color: #22223b;
-  padding: 8px 16px;
-  // border-radius: 20px;
-  font-size: 1.2rem;
-  font-weight: 800;
-  // background-color: #3d405b;
-  // text-shadow: rgba(255, 162, 0, 0.84) 0px 0px 39px; // animation: popInBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  // margin-left: auto;
+  width: fit-content;
+  font-family: "ActualComicSans", cursive;
   color: #fff;
+  padding: 9px 22px;
+  font-size: 0.8rem;
+  font-weight: 800;
   overflow: hidden;
-  border-top: 1px solid rgb(255 49 49);
-  border-right: 1px solid rgb(0 255 255);
-  border-bottom: 1px solid rgb(57 255 20);
-  border-left: 1px solid rgb(255 255 113);
   border-radius: 10px;
-  background: #22223b;
+  // background: #0f0f1a;
+  @include ut.breakpoint(large) {
+    // width: fit-content;
+    font-size: 0.85rem;
+  }
+  @include ut.breakpoint(medium) {
+    text-align: center;
+    flex: 1;
+  }
+  background: linear-gradient(180deg, #3d405b 0%, #1f2235 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  // Amber shimmer sweep
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(251, 191, 36, 0.12),
+      transparent
+    );
+    animation: amberShimmer 2.5s ease-in-out infinite;
+  }
+
+  &.pop-active {
+    animation: popBounce 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+  }
+
+  &.shake-active {
+    animation: shakeError 0.5s ease-in-out;
+    background-color: #b91c1c;
+    border-color: rgba(255, 255, 255, 0.15);
+    .highlight1,
+    .highlight2 {
+      text-shadow: none;
+      color: #f2cc8f;
+    }
+  }
+
+  @include ut.breakpoint(medium) {
+    width: fit-content;
+    font-size: 0.72rem;
+  }
+  @include ut.breakpoint(small) {
+    font-size: 0.62rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.47rem;
+  }
+}
+
+@keyframes amberShimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
 }
 
 @keyframes popInBounce {
@@ -522,15 +712,6 @@ $shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 }
 
-.streak__badge {
-  /* ... your existing styles stay exactly the same ... */
-
-  /* Add this new modifier class right inside or below .streak__badge */
-  &.pop-active {
-    animation: popBounce 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
-  }
-}
-
 // Fail
 @keyframes shakeError {
   0%,
@@ -547,25 +728,104 @@ $shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 }
 
-.streak__badge {
-  /* ... your existing code ... */
+// ---------------------------------------- Game Over Screen -------------------------------------------
+.mastery-complete-banner {
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Stacked for mobile, can be row for desktop */
+  align-items: center;
+  gap: 1.5rem;
+  background: #ffffff;
+  border: 4px solid #3d405b; /* Thick Navy Hub Border */
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  max-width: 550px;
+  margin: 4rem auto;
+  text-align: center;
+  box-shadow: 10px 10px 0px #3d405b; /* Signature Hub Shadow */
+  animation: bannerPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  &.pop-active {
-    animation: popBounce 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+  @include ut.breakpoint(medium) {
+    flex-direction: row;
+    text-align: left;
+    padding: 2.5rem 3.5rem;
   }
 
-  /* NEW: The failure state */
-  &.shake-active {
-    animation: shakeError 0.5s ease-in-out;
-    background-color: #b91c1c;
-    color: white;
-    border-color: #b91c1c;
+  .banner-icon-container {
+    background: #f2cc8f; /* Brand Gold */
+    min-width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid #3d405b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #3d405b;
+    box-shadow: 5px 5px 0px #3d405b;
+  }
 
-    /* Force the inner spans to turn white so they don't clash with the red background */
-    .highlight1,
-    .highlight2 {
-      color: white;
-      text-shadow: none;
+  .banner-content {
+    h3 {
+      margin: 0;
+      color: #3d405b;
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
     }
+
+    p {
+      margin: 0.5rem 0 1.5rem;
+      color: #64748b;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .banner-action-btn {
+      font-family: "ActualComicSans", cursive;
+
+      background: #3d405b;
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        background: #f2cc8f;
+        color: #3d405b;
+        transform: translateY(-2px);
+        box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  .decoration-star {
+    position: absolute;
+    color: #f2cc8f;
+    opacity: 0.7;
+    &.top-right {
+      top: 15px;
+      right: 15px;
+    }
+    &.bottom-left {
+      bottom: 15px;
+      left: 15px;
+    }
+  }
+}
+
+@keyframes bannerPop {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }

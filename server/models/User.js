@@ -38,6 +38,15 @@ const masteryStateSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const issuedQuestionSchema = new mongoose.Schema(
+  {
+    conceptId: { type: String, required: true },
+    questionId: { type: String, required: true },
+    issuedAt: { type: Date, default: Date.now },
+  },
+  { _id: false },
+);
+
 const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true, trim: true },
@@ -85,6 +94,10 @@ const userSchema = new mongoose.Schema(
       default: 0,
     },
     loginCount: { type: Number, default: 0 },
+    issuedQuestion: {
+      type: issuedQuestionSchema,
+      default: null,
+    },
   },
   { timestamps: true },
 );

@@ -1,3 +1,5 @@
+@use "../../util/breakpoint" as ut;
+
 .visual__container {
   position: relative;
   margin: 2rem 0;
@@ -46,7 +48,7 @@
   padding: 12px 0;
   border: none;
   animation: breathing 2s ease-out infinite normal;
-  font-family: cursive;
+  font-family: "ActualComicSans", cursive;
   font-size: 3rem;
   color: #e07a5f;
   -webkit-font-smoothing: antialiased;

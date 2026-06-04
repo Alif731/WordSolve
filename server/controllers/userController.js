@@ -13,9 +13,52 @@ const {
 
 const DEFAULT_ROLE = "student";
 const VALID_ROLES = ["student", "teacher"];
-const DEFAULT_ZPD_NODES = ["foundation_signs"];
+const DEFAULT_ZPD_NODES = ["single_add"];
 const DEFAULT_AVATAR = "beam";
 const GOOGLE_STATE_COOKIE = "google_oauth_state";
+const USERNAME_PATTERN = /^[a-zA-Z0-9_]{3,24}$/;
+const AVATAR_VARIANTS = new Set([
+  "beam",
+  "marble",
+  "pixel",
+  "ring",
+  "sunset",
+  "bauhaus",
+]);
+
+const readTrimmedString = (value) => (typeof value === "string" ? value.trim() : "");
+const readString = (value) => (typeof value === "string" ? value : "");
+
+const validateUsername = (username) => {
+  if (!USERNAME_PATTERN.test(username)) {
+    return {
+      error: "Username must be 3-24 characters and use only letters, numbers, or underscores",
+    };
+  }
+
+  return { error: null };
+};
+
+const validatePassword = (password) => {
+  if (typeof password !== "string") {
+    return { error: "Password must be a string" };
+  }
+
+  if (password.length < 6) {
+    return { error: "Password must be at least 6 characters long" };
+  }
+  if (password.length > 72) {
+    return { error: "Password must be 72 characters or fewer" };
+  }
+  if (!/[a-zA-Z]/.test(password)) {
+    return { error: "Password must contain at least one letter" };
+  }
+  if (!/\d/.test(password)) {
+    return { error: "Password must contain at least one number" };
+  }
+
+  return { error: null };
+};
 
 const buildUserResponse = (user) => ({
   _id: user._id,
@@ -122,16 +165,14 @@ const parseRequestedRole = (value) => {
 };
 
 const normalizeTeacherCode = (value) =>
-  String(value || "")
-    .trim()
-    .toUpperCase();
+  readTrimmedString(value).toUpperCase();
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
 // @access  Public
 const authUser = async (req, res) => {
-  const username = String(req.body?.username || "").trim();
-  const password = String(req.body?.password || "");
+  const username = readTrimmedString(req.body?.username);
+  const password = readString(req.body?.password);
   const { role: requestedRole, error: roleError } = parseRequestedRole(
     req.body?.role,
   );
@@ -173,8 +214,8 @@ const authUser = async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = async (req, res) => {
-  const username = String(req.body?.username || "").trim();
-  const password = String(req.body?.password || "");
+  const username = readTrimmedString(req.body?.username);
+  const password = readString(req.body?.password);
   const teacherCode = normalizeTeacherCode(req.body?.teacherCode);
   const { role: requestedRole, error: roleError } = parseRequestedRole(
     req.body?.role,
@@ -184,6 +225,18 @@ const registerUser = async (req, res) => {
 
   if (!username || !password) {
     res.status(400).json({ message: "Username and password are required" });
+    return;
+  }
+
+  const { error: usernameError } = validateUsername(username);
+  if (usernameError) {
+    res.status(400).json({ message: usernameError });
+    return;
+  }
+
+  const { error: passwordError } = validatePassword(password);
+  if (passwordError) {
+    res.status(400).json({ message: passwordError });
     return;
   }
 
@@ -377,13 +430,19 @@ const updateUserProfile = async (req, res) => {
     return;
   }
 
-  const requestedUsername = String(req.body?.username || "").trim();
-  const nextPassword = String(req.body?.password || "");
-  const currentPassword = String(req.body?.currentPassword || "");
-  const requestedAvatar = String(req.body?.avatar || "").trim();
-  const requestedAvatarSeed = String(req.body?.avatarSeed || "").trim(); // 1. Avatar don't change for existing user
+  const requestedUsername = readTrimmedString(req.body?.username);
+  const nextPassword = readString(req.body?.password);
+  const currentPassword = readString(req.body?.currentPassword);
+  const requestedAvatar = readTrimmedString(req.body?.avatar);
+  const requestedAvatarSeed = readTrimmedString(req.body?.avatarSeed); // 1. Avatar don't change for existing user
 
   if (requestedUsername && requestedUsername !== user.username) {
+    const { error: usernameError } = validateUsername(requestedUsername);
+    if (usernameError) {
+      res.status(400).json({ message: usernameError });
+      return;
+    }
+
     const existingUser = await User.findOne({
       username: requestedUsername,
       _id: { $ne: user._id },
@@ -399,11 +458,21 @@ const updateUserProfile = async (req, res) => {
 
   // Update the Style (beam, pixel, etc.)
   if (requestedAvatar) {
+    if (!AVATAR_VARIANTS.has(requestedAvatar)) {
+      res.status(400).json({ message: "Invalid avatar style selected" });
+      return;
+    }
+
     user.avatar = requestedAvatar;
   }
 
   // 2. Update the Seed (the actual face pattern)
   if (requestedAvatarSeed) {
+    if (requestedAvatarSeed.length > 64) {
+      res.status(400).json({ message: "Avatar seed is too long" });
+      return;
+    }
+
     user.avatarSeed = requestedAvatarSeed;
   }
 
@@ -421,6 +490,12 @@ const updateUserProfile = async (req, res) => {
         res.status(401).json({ message: "Invalid current password" });
         return;
       }
+    }
+
+    const { error: passwordError } = validatePassword(nextPassword);
+    if (passwordError) {
+      res.status(400).json({ message: passwordError });
+      return;
     }
 
     user.password = nextPassword;

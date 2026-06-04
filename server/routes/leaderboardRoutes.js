@@ -4,7 +4,7 @@ const {
   updateLeaderboardStatus,
   getLeaderboard,
 } = require('../controllers/leaderboardController');
-const { protect, teacherOnly } = require('../controllers/middleware/authMiddleware');
+const { protect, teacherOnly } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 

@@ -36,7 +36,7 @@ const OAuthCallback = () => {
 
         dispatch(apiSlice.util.resetApiState());
         dispatch(setCredentials({ ...profile }));
-        navigate(getDefaultRouteForRole(profile.role), { replace: true });
+        navigate(getDefaultRouteForRole(profile.role, profile.loginCount), { replace: true });
       } catch (err) {
         if (!isCancelled) {
           setMessage(err?.data?.message || err?.error || "Google sign-in could not be completed.");

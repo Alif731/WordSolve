@@ -11,12 +11,12 @@ const {
   updateUserProfile,
   getUserRecentActivity,
 } = require('../controllers/userController');
-const { protect } = require('../controllers/middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
 const {
   loginLimiter,
   registerLimiter,
   oauthLimiter,
-} = require('../controllers/middleware/rateLimitMiddleware');
+} = require('../middleware/rateLimitMiddleware');
 
 router.get('/oauth/providers', getOAuthProviders);
 router.get('/oauth/google', oauthLimiter, startGoogleOAuth);

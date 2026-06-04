@@ -5,6 +5,7 @@ import { setCredentials } from "../store/slices/authSlice";
 import { useUpdateUserMutation } from "../store/slices/usersApiSlice";
 
 import PasswordField from "../components/PasswordField";
+import { validatePassword } from "../utils/validatePassword";
 import { toast } from "react-toastify";
 import { ArrowLeft } from "lucide-react";
 
@@ -39,6 +40,14 @@ const ResetPassword = () => {
       const msg = "New passwords do not match";
       setMessage(msg);
       toast.error(msg);
+      setIsSuccess(false);
+      return;
+    }
+
+    const { error: passwordError } = validatePassword(password);
+    if (passwordError) {
+      setMessage(passwordError);
+      toast.error(passwordError);
       setIsSuccess(false);
       return;
     }

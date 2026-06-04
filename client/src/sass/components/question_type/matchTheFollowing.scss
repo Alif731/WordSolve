@@ -1,3 +1,4 @@
+@use "../../util/breakpoint" as ut;
 .match-container {
   position: relative;
   width: 100%;
@@ -81,7 +82,7 @@
   width: 50%;
   margin-left: auto;
   margin-right: auto;
-  font-family: cursive;
+  font-family: "ActualComicSans", cursive;
   background-color: #def4e8;
   color: #3d405b;
   font-weight: 700; // font-bold

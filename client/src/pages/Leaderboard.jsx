@@ -41,6 +41,66 @@ const Leaderboard = () => {
     error: leaderboardError,
   } = useGetLeaderboardQuery(50, { skip: !shouldFetchLeaderboard }); // show leaderboard for 50
 
+  /**
+   * Sorts the leaderboard entries.
+   * Primary criteria: Highest number of correct attempts.
+   * Secondary criteria (Tie-breaker): Highest accuracy percentage.
+   */
+  // const sortedLeaderboard = useMemo(() => {
+  //   if (!leaderboardData?.entries) return [];
+
+  //   // 1. Sort the data
+  //   const sorted = [...leaderboardData.entries].sort((a, b) => {
+  //     // Primary: Who has the most correct answers?
+  //     if (b.correctAttempts !== a.correctAttempts) {
+  //       return b.correctAttempts - a.correctAttempts;
+  //     }
+  //     // Tie-Breaker: If correct answers are tied, who has the better accuracy?
+  //     return b.accuracy - a.accuracy;
+  //   });
+
+  //   // 2. Re-assign the rank numbers (1, 2, 3...) based on the new sorted order
+  //   return sorted.map((entry, index) => ({
+  //     ...entry,
+  //     rank: index + 1,
+  //   }));
+  // }, [leaderboardData]);
+
+  /**
+   * Sorts the leaderboard entries using a "True Mastery Score"
+   * Combines Correct Answers, Accuracy, AND Total Questions Attempted.
+   */
+
+  const sortedLeaderboard = useMemo(() => {
+    if (!leaderboardData?.entries) return [];
+
+    // 1. Calculate a unified "Power Score" for each student
+    const entriesWithScores = [...leaderboardData.entries].map((entry) => {
+      // Base Score: Punishes spamming (e.g., 10 correct * 0.50 accuracy = 5 base points)
+      const baseScore = entry.correctAttempts * (entry.accuracy / 100);
+
+      // Volume Bonus: Rewards hard work (e.g., +0.1 points just for trying a question)
+      // This ensures a student who did 100 questions beats a student who did 1 question!
+      const volumeBonus = entry.totalAttempts * 0.1;
+
+      // Final unified score
+      const powerScore = baseScore + volumeBonus;
+
+      return { ...entry, powerScore };
+    });
+
+    // 2. Sort everyone by their new Power Score (highest to lowest)
+    const sorted = entriesWithScores.sort(
+      (a, b) => b.powerScore - a.powerScore,
+    );
+
+    // 3. Re-assign the rank numbers (1, 2, 3...) based on the new order
+    return sorted.map((entry, index) => ({
+      ...entry,
+      rank: index + 1,
+    }));
+  }, [leaderboardData]);
+
   const toggleLeaderboard = async () => {
     if (!isTeacher || isToggling) return;
     await updateLeaderboardStatus(!isEnabled).unwrap();
@@ -127,7 +187,8 @@ const Leaderboard = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {leaderboardData.entries.map((entry) => (
+                      {/* {leaderboardData.entries.map((entry) => ( */}
+                      {sortedLeaderboard.map((entry) => (
                         <tr
                           key={entry.userId}
                           className={`rank-row ${entry.rank <= 3 ? `top-${entry.rank}` : ""}`}

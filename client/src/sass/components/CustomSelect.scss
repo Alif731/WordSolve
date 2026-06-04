@@ -1,0 +1,439 @@
+@use "../util/breakpoint" as ut;
+
+.wizard-select {
+  position: relative;
+  width: 100%;
+  user-select: none;
+  outline: none;
+
+  &.is-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    .wizard-select__trigger {
+      background: #f1f5f9;
+      cursor: not-allowed;
+    }
+  }
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // width: 100%;
+    height: 2.7rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #5f91e0;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    @include ut.breakpoint(large) {
+      height: 2.5rem;
+      font-size: 1rem;
+    }
+    @include ut.breakpoint(medium) {
+      font-size: 0.9rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.8rem;
+    }
+
+    span.is-placeholder {
+      color: #5f91e0;
+      @include ut.breakpoint(medium) {
+        font-size: 0.9rem;
+      }
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.8rem;
+      }
+    }
+
+    .wizard-select__icon {
+      color: #64748b;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      border-color: #94a3b8;
+    }
+
+    &.is-open {
+      border-color: #6fa3f8;
+      //   border-color: #e7b360;
+      box-shadow: 0 0 0 4px rgba(111, 163, 248, 0.15);
+      .wizard-select__icon {
+        transform: rotate(180deg);
+        color: #3b82f6;
+      }
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 0.6rem;
+    margin: 0;
+    list-style: none;
+    box-shadow:
+      0 10px 25px -5px rgba(61, 64, 91, 0.12),
+      0 8px 10px -6px rgba(61, 64, 91, 0.08);
+
+    z-index: 999 !important;
+    animation: menuFadeIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* --- Individual Options --- */
+  &__option {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #475569;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    @include ut.breakpoint(medium) {
+      font-size: 0.9rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.8rem;
+    }
+
+    &:hover {
+      background: #f8fbff;
+      color: #3b82f6;
+      transform: translateX(6px);
+    }
+
+    &.is-selected {
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 900;
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #3b82f6;
+        border-radius: 50%;
+        margin-right: 12px;
+        box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+      }
+    }
+    &.is-placeholder-option {
+      color: #94a3b8;
+      font-style: normal;
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem 0.8rem 1rem;
+      margin-bottom: 0.4rem;
+      border-bottom: 2px dashed #e2e8f0;
+      border-radius: 0;
+      pointer-events: none;
+
+      &:hover {
+        transform: none;
+        background: transparent;
+      }
+    }
+  }
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   GHOST / HINT SCAFFOLDING — SHIMMER (Skeleton Load Effect)
+   ========================================================================== */
+
+// ── Tokens ────────────────────────────────────────────────────────────────
+$ghost-border: #cbd5e1; // slate-300 – subtle dashed line
+$ghost-bg-start: #f8fafc; // slate-50
+$ghost-bg-mid: #e2e8f0; // slate-200 – shimmer highlight
+$ghost-text: #94a3b8; // slate-400 – faded text
+
+// ── Keyframes: moving gradient ───────────────────────────────────────────
+@keyframes ghost-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// ── Generic ghost inputs (select, input, any custom component) ────────────
+// Module 3
+.ghost-select,
+.ghost-input {
+  font-family: "ActualComicSans", cursive;
+  // font-style: italic !important;
+  opacity: 0.8;
+  background-color: transparent !important;
+  // background-image: linear-gradient(
+  //   90deg,
+  //   $ghost-bg-start 0%,
+  //   $ghost-bg-mid 50%,
+  //   $ghost-bg-start 100%
+  // ) !important;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(148, 163, 184, 0.08) 10px,
+    rgba(148, 163, 184, 0.08) 14px
+  ) !important;
+  border: 2px dashed rgba(148, 163, 184, 0.4) !important;
+  box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.06) !important;
+  transform: translateY(0) !important;
+  background-size: 200% 100% !important;
+  background-repeat: no-repeat !important;
+  animation: ghost-shimmer 2s ease-in-out infinite !important;
+
+  // Ensure the text content (strong, span) is not affected
+  strong,
+  span,
+  &::placeholder,
+  &[placeholder] {
+    font-family: "ActualComicSans", cursive;
+    color: $ghost-text !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    letter-spacing: 0.02em;
+    background: none !important;
+    opacity: 0.8;
+  }
+
+  strong {
+    font-family: "ActualComicSans", cursive;
+    color: #94a3b8 !important;
+    font-weight: 800 !important;
+    font-style: normal !important;
+    font-size: 1.1rem;
+
+    letter-spacing: 0.02em;
+    background: none !important;
+    opacity: 0.8;
+    @include ut.breakpoint(medium) {
+      font-size: 0.8rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.7rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.6rem;
+    }
+  }
+
+  &::placeholder,
+  &[placeholder] {
+    font-family: "ActualComicSans", cursive;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    opacity: 1 !important;
+  }
+}
+
+// ── // Module 2 Bar‑model specific overrides (highest specificity) ───────────────────
+.bar-model {
+  font-family: "ActualComicSans", cursive;
+  .bar-box.ghost-input {
+    font-family: "ActualComicSans", cursive;
+    background-color: transparent !important;
+    // background-image: linear-gradient(
+    //   90deg,
+    //   $ghost-bg-start 0%,
+    //   $ghost-bg-mid 50%,
+    //   $ghost-bg-start 100%
+    // ) !important;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(148, 163, 184, 0.08) 10px,
+      rgba(148, 163, 184, 0.08) 14px
+    ) !important;
+    border: 2px dashed rgba(148, 163, 184, 0.4) !important;
+    box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.06) !important;
+    transform: translateY(0) !important;
+
+    background-size: 200% 100% !important;
+    background-repeat: no-repeat !important;
+    // border: 1.5px dashed $ghost-border !important;
+    animation: ghost-shimmer 2s ease-in-out infinite !important;
+
+    // Style the inner number and label
+    strong {
+      font-family: "ActualComicSans", cursive;
+      color: $ghost-text !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+      background: none !important;
+      opacity: 0.8;
+      @include ut.breakpoint(medium) {
+        font-size: 1rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.9rem;
+      }
+      @include ut.breakpoint(xSmall) {
+        font-size: 0.8rem;
+      }
+    }
+
+    span {
+      font-family: "ActualComicSans", cursive;
+      color: $ghost-text !important;
+      font-style: normal !important;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      background: none !important;
+    }
+  }
+}
+
+// Shimmer wrapper for value input (reliable animation)
+.shimmer-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px; // match input radius
+  width: 100%;
+  height: 42px; // adjust to your input height
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%);
+    animation: ghost-shimmer 2s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none; // allows clicking through to input
+  }
+
+  .worksheet-input.ghost-input {
+    background: transparent !important; // let gradient show through
+    border: 1.5px dashed #cbd5e1 !important;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+
+    &::placeholder {
+      color: #94a3b8 !important;
+      font-style: normal !important;
+    }
+  }
+}
+
+// ── CONTENTEDITABLE DIV (Ghost Value) – restores text style ──────────────
+.worksheet-input.ghost-input.shimmer-div {
+  font-family: "ActualComicSans", cursive;
+  // font-style: italic !important;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.7rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0 1rem;
+  font-size: 1.1rem;
+  // font-weight: 700;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  // background: none !important;
+  color: #94a3b8 !important;
+  @include ut.breakpoint(large) {
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+  @include ut.breakpoint(medium) {
+    font-size: 0.9rem;
+  }
+  @include ut.breakpoint(xSmall) {
+    font-size: 0.8rem;
+  }
+}
+// In your main SCSS file, after the generic .ghost-input rules
+.equation-box.ghost-input {
+  // strong {
+  //   color: $ghost-text !important;
+  //   font-weight: 400 !important;
+  //   font-style: italic !important;
+  // }
+  // Optional: keep label normal
+  span {
+    color: $ghost-text !important;
+    font-style: normal !important;
+  }
+}
+.equation-box--operator.ghost-input {
+  strong {
+    color: $ghost-text !important;
+  }
+}
+/* ======================================================== */
+/* GHOST HINT / BLUEPRINT STATE (Empty Mold Effect)         */
+/* ======================================================== */
+
+.bar-model.is-pill-model {
+  /* Target both the ghost hint and the standard missing value blocks */
+  .bar-box--ghost,
+  .is-missing-value {
+    /* 1. Glassy, sunken background */
+    background-color: rgba(241, 245, 249, 0.6) !important;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(148, 163, 184, 0.08) 10px,
+      rgba(148, 163, 184, 0.08) 14px
+    ) !important;
+
+    /* 2. Chunky, soft dashed border */
+    border: 2px dashed rgba(148, 163, 184, 0.4) !important;
+    /* 3. The secret sauce: An inner shadow makes it look physically hollow/empty */
+    box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.06) !important;
+
+    /* 4. Keep it flat in the tray (no bouncing) */
+    transform: translateY(0) !important;
+
+    /* 5. Soften the text so the actual answer feels much stronger when typed */
+    strong,
+    span {
+      opacity: 0.65;
+      color: #64748b !important;
+    }
+  }
+}

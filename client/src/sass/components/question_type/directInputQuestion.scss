@@ -1,3 +1,5 @@
+@use "../../util/breakpoint" as ut;
+
 .answer__form {
   display: flex;
   flex-direction: column;
@@ -29,7 +31,7 @@
     width: 50%;
     margin-left: auto;
     margin-right: auto;
-    font-family: cursive;
+    font-family: "ActualComicSans", cursive;
     background-color: #f4f1de;
     color: #e07a5f;
     font-weight: 700;

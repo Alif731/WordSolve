@@ -5,7 +5,7 @@ const attemptSchema = new mongoose.Schema({
   conceptId: { type: String, required: true },
   questionId: { type: String, required: true },
   isCorrect: { type: Boolean, required: true },
-  response: { type: String },
+  response: { type: mongoose.Schema.Types.Mixed },
   timestamp: { type: Date, default: Date.now }
 });
 

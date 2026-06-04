@@ -2,7 +2,7 @@
 
 .profile-page {
   min-height: 88vh;
-  font-family: cursive;
+  font-family: "ActualComicSans", cursive;
   padding: 1rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -25,6 +25,9 @@
     display: flex;
     gap: 15px;
     flex-direction: column;
+    @include ut.breakpoint(large) {
+      flex-direction: row;
+    }
   }
 
   .profile-section {
@@ -43,6 +46,15 @@
       // text-shadow: rgba(242, 204, 143, 0.5) 0 0 10px;
       border-bottom: 2px dashed #f2cc8f;
       padding-bottom: 0.5rem;
+      @include ut.breakpoint(medium) {
+        font-size: 1.5rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 1.3rem;
+      }
+      @include ut.breakpoint(small) {
+        // font-size: 0.5rem;
+      }
     }
   }
 
@@ -51,11 +63,20 @@
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
     align-items: stretch;
+    @include ut.breakpoint(medium) {
+      display: block;
+    }
   }
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1.5rem;
+    @include ut.breakpoint(small) {
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    }
+    @include ut.breakpoint(xSmall) {
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    }
 
     .stat-card {
       background: #f4f1de;
@@ -63,6 +84,17 @@
       border-radius: 16px;
       text-align: center;
       border: 2px solid #f2cc8f;
+      @include ut.breakpoint(medium) {
+        padding: 0.8rem;
+        // font-size: 0.4rem;
+      }
+      @include ut.breakpoint(small) {
+        // font-size: 0.34rem;
+      }
+      //375px
+      // @include ut.breakpoint(xSmall) {
+      //   font-size: 0.3rem;
+      // }
 
       .stat-label {
         display: block;
@@ -76,6 +108,16 @@
         color: #e07a5f;
         font-size: 1.6rem;
         font-weight: 800;
+        @include ut.breakpoint(medium) {
+          font-size: 1.2rem;
+        }
+        @include ut.breakpoint(small) {
+          font-size: 1rem;
+        }
+        //375px
+        // @include ut.breakpoint(xSmall) {
+        //   font-size: 0.3rem;
+        // }
       }
     }
   }
@@ -140,11 +182,33 @@
       strong {
         color: #0071e9;
       }
+      @include ut.breakpoint(medium) {
+        font-size: 0.7rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.6rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.4rem;
+      }
+      //375px
+      // @include ut.breakpoint(xSmall) {
+      //   font-size: 0.3rem;
+      // }
     }
 
     .activity-date {
       color: #6b6f88;
-      font-size: 0.9rem;
+      font-size: 1.1rem;
+      @include ut.breakpoint(medium) {
+        font-size: 0.7rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.6rem;
+      }
+      @include ut.breakpoint(small) {
+        font-size: 0.4rem;
+      }
     }
   }
 
@@ -156,6 +220,12 @@
     background: #fffcf7;
     border-radius: 16px;
     border: 2px dashed #f2cc8f;
+    @include ut.breakpoint(medium) {
+      padding: 0.5rem;
+    }
+    @include ut.breakpoint(small) {
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
 
     .avatar-option {
       font-size: 2.5rem;
@@ -188,6 +258,12 @@
         color: #5d6185;
         margin-bottom: 0.4rem;
         font-weight: bold;
+        @include ut.breakpoint(medium) {
+          font-size: 1.1rem;
+        }
+        @include ut.breakpoint(small) {
+          // font-size: 0.34rem;
+        }
       }
       input {
         width: 100%;
@@ -195,8 +271,14 @@
         border: 2px solid #f2cc8f;
         border-radius: 12px;
         padding: 0.8rem;
-        font-family: cursive;
+        font-family: "ActualComicSans", cursive;
         background: #fffcf7;
+        @include ut.breakpoint(medium) {
+          font-size: 0.9rem;
+        }
+        @include ut.breakpoint(small) {
+          // font-size: 0.34rem;
+        }
       }
     }
   }
@@ -207,11 +289,19 @@
     padding: 0.8rem 1.5rem;
     background: #3d405b;
     color: #f2e9e4;
-    font-family: cursive;
+    font-family: "ActualComicSans", cursive;
     font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s;
+
+    @include ut.breakpoint(medium) {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+    }
+    @include ut.breakpoint(small) {
+      // font-size: 0.34rem;
+    }
 
     &:hover {
       background-color: #3d405b;
@@ -242,6 +332,12 @@
       font-weight: 700;
       text-decoration: underline;
     }
+    @include ut.breakpoint(large) {
+      font-size: 0.8rem;
+    }
+    @include ut.breakpoint(xSmall) {
+      font-size: 0.65rem;
+    }
   }
 
   .profile-message {
@@ -269,18 +365,26 @@
     }
   }
 }
+.avatar-preview {
+  svg {
+    @include ut.breakpoint(medium) {
+      width: 50px;
+    }
+    @include ut.breakpoint(small) {
+      width: 40px;
+    }
+  }
+}
 
 .player-badge-profile {
   border-radius: 12px;
   border-right: 5px solid #f2cc8f;
   border-bottom: 5px solid #f2cc8f;
-
-  font-family: cursive;
-
-  background-color: #3d405b;
+  font-family: "ActualComicSans", cursive;
+  background: linear-gradient(145deg, #3d405b 0%, #11161c 100%);
   color: #f2e9e4;
   padding: 10px;
-  border-radius: 9999px;
+  border-radius: 20px;
   font-weight: bold;
   font-size: 2rem;
 
@@ -293,8 +397,14 @@
 
   @include ut.breakpoint(medium) {
     font-size: 1.2rem;
+    justify-content: center;
+    padding: 0px;
+    width: 100%;
   }
   @include ut.breakpoint(small) {
+    font-size: 0.9rem;
+  }
+  @include ut.breakpoint(xSmall) {
     font-size: 0.6rem;
   }
 
@@ -335,6 +445,12 @@
   align-items: center;
   flex-wrap: wrap; // Wrap on small phones
   gap: 1rem;
+  @include ut.breakpoint(medium) {
+    margin: 0;
+  }
+  // @include ut.breakpoint(small) {
+  //   font-size: 0.34rem;
+  // }
 }
 
 // Activity Section Style
@@ -389,12 +505,27 @@
     color: #374151;
     font-weight: 600;
   }
+  @include ut.breakpoint(xSmall) {
+    gap: 0.1rem;
+  }
 
   .activity-date {
     display: block;
     font-size: 0.75rem;
     color: #9ca3af;
     margin-top: 2px;
+  }
+  .activity-text,
+  .activity-date {
+    @include ut.breakpoint(medium) {
+      font-size: 0.7rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.6rem;
+    }
+    @include ut.breakpoint(small) {
+      font-size: 0.5rem;
+    }
   }
 }
 
