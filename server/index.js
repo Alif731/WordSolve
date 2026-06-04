@@ -7,9 +7,26 @@ const compression = require("compression");
 const connectDB = require("./config/db");
 
 const path = require("path");
-dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 const isProduction = process.env.NODE_ENV === "production";
+
+// In production, Railway injects all environment variables directly into
+// process.env — there is no .env file on the server. Loading one would
+// either fail silently or, worse, override Railway's variables with stale
+// local values. Only load the .env file in non-production environments,
+// and use override:false so any variable already present in the environment
+// (e.g. set in the shell) is never clobbered.
+if (!isProduction) {
+  dotenv.config({ path: path.resolve(__dirname, ".env"), override: false });
+}
+
+// Default CLIENT_URL to the Railway-provided public domain when the variable
+// is not set explicitly. This covers the common case where the front-end is
+// served from the same Railway service as the API.
+if (!process.env.CLIENT_URL && process.env.RAILWAY_PUBLIC_DOMAIN) {
+  process.env.CLIENT_URL = `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
+}
+
 const weakSecrets = new Set([
   "secret",
   "jwtsecret",
