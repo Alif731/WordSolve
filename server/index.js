@@ -91,9 +91,25 @@ app.use("/api/users", userRoutes);
 app.use("/api/leaderboard", leaderboardRoutes);
 app.use("/api/teacher", teacherRoutes);
 
-app.get("/", (_req, res) => {
-  res.send("API is running...");
-});
+// Serve static assets in production
+if (process.env.NODE_ENV === "production") {
+  // Set static folder for compiled React client assets
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+
+  // Any non-API route serves the React index.html for client-side routing
+  app.get("*", (req, res) => {
+    // Prevent API routing misdirection
+    if (req.originalUrl.startsWith("/api")) {
+      return res.status(404).json({ message: "API endpoint not found" });
+    }
+    res.sendFile(path.resolve(__dirname, "../client/dist", "index.html"));
+  });
+} else {
+  // Safe default index response for local development
+  app.get("/", (_req, res) => {
+    res.send("API is running...");
+  });
+}
 
 const { errorHandler } = require("./middleware/errorMiddleware");
 app.use(errorHandler);

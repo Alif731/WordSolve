@@ -6,7 +6,9 @@
   "scripts": {
     "server": "nodemon --watch server server/index.js",
     "client": "npm run dev --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm run build --prefix client",
+    "start": "node server/index.js"
   },
   "workspaces": [
     "client",
